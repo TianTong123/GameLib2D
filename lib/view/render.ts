@@ -120,31 +120,62 @@ export default class Render{
   }
   
   // 总渲染
-  public render(): void{
-    // 静态资源都不动的,所以只渲染一次
-    this.clear();
-    this.renderStatic();
-    this.renderAnimation();
-    this.updateGameObject();
-    this.handlecollision();
-    setTimeout(()=>{
+  // public render(): void{
+  //   this.clear();
+  //   this.renderStatic();
+  //   this.renderAnimation();
+  //   this.updateGameObject();
+  //   this.handlecollision();
+  //   setTimeout(()=>{
+  //     this.render();
+  //   }, GAME.REFRESH_FRAME)
+  // }
+
+//   function render() {
+//     if(flag == true){
+//         if(left>=100){
+//             flag = false
+//         }
+//         e.style.left = ` ${left++}px`
+//     }else{
+//         if(left<=0){
+//             flag = true
+//         }
+//         e.style.left = ` ${left--}px`
+//     }
+// }
+
+// //requestAnimationFrame效果
+// (function animloop() {
+//     render();
+//     window.requestAnimationFrame(animloop);
+// })();
+
+  // 改为 requestAnimationFrame 渲染
+  public render(): void {
+    // 取得增量时间
+    window.requestAnimationFrame((deltaTime)=>{
       this.render();
-    }, GAME.REFRESH_FRAME)
+    })
   }
+
+
 
   /**
    * 清空画布方法
    */
   public clear(): void{
+    // 静态资源都不动的,所以只渲染一次
     this.CTX.clearRect(0, 0, this.width, this.height);
     this.CTX_ANIMATION.clearRect(0, 0, this.width, this.height);
-    this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
+    // this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
   }
 
   /**
    * 设置四个数组
    */
   public setList( staticList: Array<View>, animationList: Array<GameAnimation>, uiList: any, gameObjectList: Array<GameObject>, rigidbodyList: Array<RigidBody>): void{
+    this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
     // 静态资源
     this.staticList = staticList;
     // 动画资源
