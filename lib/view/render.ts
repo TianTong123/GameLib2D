@@ -120,43 +120,25 @@ export default class Render{
   }
   
   // 总渲染
-  // public render(): void{
-  //   this.clear();
-  //   this.renderStatic();
-  //   this.renderAnimation();
-  //   this.updateGameObject();
-  //   this.handlecollision();
-  //   setTimeout(()=>{
-  //     this.render();
-  //   }, GAME.REFRESH_FRAME)
-  // }
+  public render(deltaTime: number): void{
+    this.clear();
+    // this.renderStatic();
+    this.renderAnimation();
+    this.updateGameObject();
+    this.handlecollision();
+    window.requestAnimationFrame(this.render)
+    // setTimeout(()=>{
+    //   this.render();
+    // }, GAME.REFRESH_FRAME)
+  }
 
-//   function render() {
-//     if(flag == true){
-//         if(left>=100){
-//             flag = false
-//         }
-//         e.style.left = ` ${left++}px`
-//     }else{
-//         if(left<=0){
-//             flag = true
-//         }
-//         e.style.left = ` ${left--}px`
-//     }
-// }
 
-// //requestAnimationFrame效果
-// (function animloop() {
-//     render();
-//     window.requestAnimationFrame(animloop);
-// })();
+
 
   // 改为 requestAnimationFrame 渲染
-  public render(): void {
+  public startRender(): void {
     // 取得增量时间
-    window.requestAnimationFrame((deltaTime)=>{
-      this.render();
-    })
+    window.requestAnimationFrame(this.render)
   }
 
 
@@ -173,9 +155,9 @@ export default class Render{
 
   /**
    * 设置四个数组
+   * 后面来细拆
    */
   public setList( staticList: Array<View>, animationList: Array<GameAnimation>, uiList: any, gameObjectList: Array<GameObject>, rigidbodyList: Array<RigidBody>): void{
-    this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
     // 静态资源
     this.staticList = staticList;
     // 动画资源
@@ -186,6 +168,9 @@ export default class Render{
     this.gameObjectList = gameObjectList;
     // 刚体资源
     this.rigidBodyList = rigidbodyList;
+    //
+    this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
+    this.renderStatic();
   }
 
   /**

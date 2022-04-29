@@ -27,6 +27,6 @@ export default class GAME {
 
   // 游戏启动
   public static start(): void{
-    this.RENDER.render();
+    this.RENDER.startRender();
   }
 }
