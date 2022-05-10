@@ -24,12 +24,12 @@ export default class Sunflower extends Plant{
     /**
      * 攻击方法
      */
-    update (): void{
+    update (deltaTime: number): void{
       // console.log("欸嘿"); 
     }
 
     // 碰撞
-    collision(): void{
-      // console.log("欸嘿"); 
+    collision(gameObject: GameObject ): void{
+      // console.log("欸嘿", gameObject); 
     }
 }

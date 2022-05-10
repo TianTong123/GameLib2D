@@ -33,6 +33,8 @@ export default class Render{
   private gameObjectList: Array<GameObject> = [];
   // 刚体数组
   private rigidBodyList: Array<RigidBody> = [];
+  // 渲染一帧完成时的时间戳
+  private timeStamp: number = 0;
 
   // 宽高
   private width: number;
@@ -97,10 +99,9 @@ export default class Render{
   /**
    * 更新 gameObject 
    */
-  public updateGameObject(): void {
+  public updateGameObject(deltaTime: number): void {
     for(let i = 0, len = this.gameObjectList.length; i < len; i ++){
-      this.gameObjectList[i]?.update();     
-      this.gameObjectList[i]?.rigidBody?.setCenter();
+      this.gameObjectList[i]?.handleUpdate(deltaTime);     
     }
   }
 
@@ -110,11 +111,7 @@ export default class Render{
   public handlecollision(): void {
     for(let i = 0, len = this.rigidBodyList.length; i < len; i ++){
       for(let j = i+1, jlen = this.rigidBodyList.length; j < jlen; j ++){
-        if(this.rigidBodyList[i].isCollision(this.rigidBodyList[j])){
-          // 互相通知对方撞了
-          this.rigidBodyList[i].gameObject.collision(this.rigidBodyList[j].gameObject);
-          this.rigidBodyList[j].gameObject.collision(this.rigidBodyList[i].gameObject);
-        }
+        this.rigidBodyList[i].checkCollision(this.rigidBodyList[j])
       }
     }
   }
@@ -122,23 +119,23 @@ export default class Render{
   // 总渲染
   public render(deltaTime: number): void{
     this.clear();
-    // this.renderStatic();
+    this.renderStatic();
     this.renderAnimation();
-    this.updateGameObject();
+    this.updateGameObject(deltaTime - this.timeStamp);
     this.handlecollision();
-    window.requestAnimationFrame(this.render)
-    // setTimeout(()=>{
-    //   this.render();
-    // }, GAME.REFRESH_FRAME)
+    this.timeStamp = deltaTime;
+    window.requestAnimationFrame((deltaTime: number)=>{
+      this.render(deltaTime);
+    })
   }
-
-
 
 
   // 改为 requestAnimationFrame 渲染
   public startRender(): void {
     // 取得增量时间
-    window.requestAnimationFrame(this.render)
+    window.requestAnimationFrame((deltaTime: number)=>{
+      this.render(deltaTime);
+    })
   }
 
 
@@ -150,7 +147,7 @@ export default class Render{
     // 静态资源都不动的,所以只渲染一次
     this.CTX.clearRect(0, 0, this.width, this.height);
     this.CTX_ANIMATION.clearRect(0, 0, this.width, this.height);
-    // this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
+    this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
   }
 
   /**
@@ -169,8 +166,8 @@ export default class Render{
     // 刚体资源
     this.rigidBodyList = rigidbodyList;
     //
-    this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
-    this.renderStatic();
+    // this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
+    // this.renderStatic();
   }
 
   /**

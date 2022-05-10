@@ -1,3 +1,4 @@
+import GameObject from "../../../lib/model/gameObject";
 import Bullet from "../bullet";
 import Plant from "../plant";
 /**
@@ -18,6 +19,7 @@ export default class Peashooter extends Plant {
     this.height = height || 69;
     this.setAni(require("@/assets/plant/Peashooter.gif"), this.width, this.height);
     // this.createRigidBody();
+    // this.setGravity(true);
   }
 
   // /**
@@ -41,14 +43,14 @@ export default class Peashooter extends Plant {
   /**
    * 攻击方法
    */
-  update(): void {
+  update(deltaTime: number): void {
     this.time += 1000/60;
     if( this.time / 3000 > 1){
       new Bullet({
         name: "PB00",
         isPierce: false,
         hurtValue: 50,
-        speed: 100,
+        speed: 40,
         isAll: true,
         range: -1,
         type: 0,
@@ -64,7 +66,7 @@ export default class Peashooter extends Plant {
   }
 
   // 碰撞
-  collision(): void {
-    console.log("欸嘿"); 
+  collision(go: GameObject): void {
+    // console.log("欸嘿", go); 
   }
 }

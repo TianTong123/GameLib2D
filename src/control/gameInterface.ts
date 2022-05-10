@@ -45,14 +45,16 @@ export default class GameInterface {
         }, 2000)
 
         new Peashooter(2,  0);
-        new Peashooter(2,  1);
-        // new Peashooter(1,  1);
-        new Peashooter(2,  2);
-        new Peashooter(2,  3);
-        new Peashooter(2,  4);
+        // new Peashooter(2,  1);
+        // // new Peashooter(1,  1);
+        // new Peashooter(2,  2);
+        // new Peashooter(2,  3);
+        // new Peashooter(2,  4);
 
-        new Sunflower(5,  2);
-
+        new Sunflower(2,  3);
+        new Sunflower(5,  0);
+        new Sunflower(4,  0);
+        new Sunflower(5,  3);
         // setTimeout(async ()=>{
         //     new Peashooter(3,  1)
         // }, 500)

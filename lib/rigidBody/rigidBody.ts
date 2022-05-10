@@ -1,27 +1,31 @@
 import GameObject from "../model/gameObject";
-import GameBase from "../interface/gameBase";
 import GAME from "../game";
-// import Vector2 from "../model/vector2";
+import Vector from "../util/vector";
 
 /**
  * 刚体类
  */
 export default class RigidBody {
   public id: string = "";
-  // 0 -360  
+  //旋转角度 0 -360  
   public rotation: number = 0;
+  // gobj对象
   public gameObject: GameObject;
-  private centerPoint: number[];
+  // 矩形中心点坐标
+  private centerPoint: Vector;
+  // 一半的宽度
   private halfWidth: number;
+  // 一半的高度
   private halfHeight: number;
-  // unit vector of x axis  
-  private axisX: number[];
-  // unit vector of y axis  
-  private axisY: number[];
-  // private rotation: number = 0;
+
+  // 单位向量
+  private axisX: Vector;
+  private axisY: Vector;
   private scaleX: number;
   private scaleY: number;
-  private offsetAxisPointDistance: number;
+
+  // 中心距离原点距离
+  private offsetAxisPointDistance: number = 0;
 
   constructor( gameObject: GameObject, rotation: number ){
     this.gameObject = gameObject;
@@ -32,128 +36,98 @@ export default class RigidBody {
     this.scaleX = 1;
     this.scaleY = 1;
 
-    this.centerPoint = [gameObject.x, gameObject.y];
+    // 将坐标轴设置在 刚体 左上角。后面会移动至中心
+    this.centerPoint = new Vector(gameObject.x, gameObject.y) ;
     
-    this.axisX = [];
-    this.axisY = [];
-
-    let offsetAxisPoint: number[] = [gameObject.x - GAME.VIEW_WIDTH, gameObject.y - GAME.VIEW_HEIGHT];
+    this.axisX = new Vector(0, 0);
+    this.axisY = new Vector(0, 0);
     
-    this.offsetAxisPointDistance = Math.sqrt(this.dot(offsetAxisPoint, offsetAxisPoint));
-    
+    // 矩形中心
     this.setRotation(rotation);
     
     GAME.ACTIVE_SCENE.addRigidbody(this);
   }
 
   /** 
-   * Get axisX and axisY projection radius distance on axis 
+   * 获取投影半径
    */
-   public getProjectionRadius(axis: number[]): number {
+   public getProjectionRadius(axis: Vector): number {
 
-    // axis, axisX and axisY are unit vector  
-    // projected axisX to axis  
-    let projectionAxisX: number = this.dot(axis, this.axisX);
-    // projected axisY to axis  
-    let projectionAxisY: number = this.dot(axis, this.axisY);
+    let projectionAxisX: number = axis.dot(this.axisX);
+    let projectionAxisY: number = axis.dot(this.axisY);
 
     return this.halfWidth * this.scaleX * projectionAxisX + this.halfHeight * this.scaleY * projectionAxisY;
   }
 
   /** 
-   * RigidBody is collision with other RigidBody 
+   * 碰撞检测
+   * 两个矩形的投影半径相加小于矩形中心点向量的投影的长度的话。说明这两个矩形在这轴并没有相交。
    */
-  public isCollision(rigidBody: RigidBody): boolean {
+  public checkCollision(rigidBody: RigidBody) {
     if(!rigidBody){
       return false;
     }
-    // two RigidBody center distance vector  
-    let centerDistanceVertor: number[] = [
-      this.centerPoint[0] - rigidBody.centerPoint[0],
-      this.centerPoint[1] - rigidBody.centerPoint[1]
-    ];
-    // 四个单位向量
-    let axes: number[][] = [
+
+    // 向量相减
+    let centerDistanceVertor:Vector = this.centerPoint.substract(rigidBody.centerPoint);
+
+    // 四个单位向量 两个就够，有遇到碰撞bug再放开
+    let axes: Vector[] = [
       this.axisX,
       this.axisY,
       rigidBody.axisX,
-      rigidBody.axisY,
+      rigidBody.axisY
     ];
+
+    // 只要有轴没有相交，就认为没有碰撞
+    // 即两个矩形的中心点距离在x轴投影的长度 大于等于 两个矩形中心点到顶点的距离在x轴上的投影长度之和
     for (let i = 0; i < axes.length; i++) {
-      // compare OBB1 radius projection add OBB2 radius projection to centerDistance projection  
-      if (this.getProjectionRadius(axes[i]) + rigidBody.getProjectionRadius(axes[i]) <= this.dot(centerDistanceVertor, axes[i])) {
-        return false;
+      if (this.getProjectionRadius(axes[i]) + rigidBody.getProjectionRadius(axes[i]) <= centerDistanceVertor.dot(axes[i])) {
+        return;
       }
     }
 
+    // 辩别方向
+    let direction: string = "vertical";
+    if( this.getProjectionRadius(axes[0]) + rigidBody.getProjectionRadius(axes[0]) - centerDistanceVertor.dot(axes[0])
+        < this.getProjectionRadius(axes[1]) + rigidBody.getProjectionRadius(axes[1]) - centerDistanceVertor.dot(axes[1]) ){
+          direction = "horizontal";
+    }
+    
+    // 互相告知对方撞了
+    this.gameObject.handleCollision(rigidBody.gameObject, direction);
+    rigidBody.gameObject.handleCollision(this.gameObject, direction);
     return true;
   }
 
-
   /** 
-   * dot-multiply 
-   */
-  private dot(axisA: number[], axisB: number[]): number {
-    return Math.abs(axisA[0] * axisB[0] + axisA[1] * axisB[1]);
-  }
-
-  /** 
-   * Set axis x and y by rotation 
-   *  整单位向量
-   * @param rotation float 0 - 360  
+   *  单位向量
+   * @param rotation 0 - 360  
    */
   public setRotation(rotation: number) {
     this.rotation = rotation;
-
-    this.axisX[0] = Math.cos(rotation);
-    this.axisX[1] = Math.sin(rotation);
-
-    this.axisY[0] = -Math.sin(rotation);
-    this.axisY[1] = Math.cos(rotation);
+    // 计算在x, y偏转角度
+    this.axisX = new Vector(Math.cos(rotation), Math.sin(rotation));
+    this.axisY = new Vector(-Math.sin(rotation), Math.cos(rotation));
     
     this.setCenter();
   }
 
   /** 
-   * Set RigidBody center point and will add offsetAxis value 
+   * 设置中心点
    */
   public setCenter() {
-    let offsetAxisPoint: number[] = [this.gameObject.x - GAME.VIEW_WIDTH, this.gameObject.y - GAME.VIEW_HEIGHT]
+    let offsetAxisPoint: Vector = new Vector(this.gameObject.x - GAME.VIEW_WIDTH, this.gameObject.y - GAME.VIEW_HEIGHT);
     
-    this.offsetAxisPointDistance = Math.sqrt(this.dot(offsetAxisPoint, offsetAxisPoint));
+    // 计算中心点到原点距离 y = √ x² + y²
+    this.offsetAxisPointDistance = Math.sqrt(offsetAxisPoint.dot(offsetAxisPoint));
     
+    // 计算这个中心点到原点距离在x轴上的长度
     let offsetX: number = this.offsetAxisPointDistance * Math.cos(this.rotation);
+
+    // 计算这个中心点到原点距离在y轴上的长度
     let offsetY: number = this.offsetAxisPointDistance * Math.sin(this.rotation);
 
-    this.centerPoint[0] = offsetX;
-    this.centerPoint[1] = offsetY + this.gameObject.y;
-  }
-
-  /** 
-   * Set RigidBody scale x, y 
-   */
-  public setScale(scaleX: number, scaleY: number) {
-    this.scaleX = scaleX;
-    this.scaleY = scaleY;
-  }
-
-  public getRotation(): number {
-    return this.rotation;
-  }
-
-  public getCenterX(): number {
-    return this.centerPoint[0];
-  }
-
-  public getCenterY(): number {
-    return this.centerPoint[1];
-  }
-
-  public getHalfWidth(): number {
-    return this.halfWidth * this.scaleX;
-  }
-
-  public getHalfHeight(): number {
-    return this.halfHeight * this.scaleY;
+    this.centerPoint = new Vector(offsetX, offsetY + this.gameObject.y);
   }
 }

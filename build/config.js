@@ -9,7 +9,7 @@ module.exports = {
 
         // 运行端口，主机命
         host: 'localhost', 
-        port: 6666, 
+        port: 8080, 
 
         // bug 工具
         cacheBusting: true,

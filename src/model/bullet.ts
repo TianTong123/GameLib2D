@@ -60,26 +60,29 @@ export default class Bullet extends Plant {
     this.y = this.getOffsetY(args.offsetY);
     this.createView(require("@/assets/bullet/PB00.png"), this.x, this.y, args.width, args.height);
     this.createRigidBody();
+    // this.forceX = 1;
+    this.setGravity(true);
+    this.setVX(this.speed)
   }
 
   /**
     * 刷新方法
     */
-  update(): void {
-    this.x =  this.x + this.speed * (1000/60/1000);
-    this.view?.setX(this.x);
+  update(deltaTime: number): void {
+    // console.log(this.x);
+    // this.x =  this.x + this.speed * deltaTime / 1000;// (1000/60/1000);
+    // this.view?.setX(this.x);
     // 飞出距离就注销
     if((this.x || 0) > 830){
       // console.log("寄了");
       this.destroy();
     }
-  
   }
 
   // 碰撞
   collision( gameObject: GameObject ): void {
     // console.log("欸嘿", gameObject); 
-    this.destroy();
+    // this.destroy();
   }
 
   /**
