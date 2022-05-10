@@ -16,11 +16,9 @@ export default abstract class Plant extends GameObject{
   /**
    * 设置动画
    * @param url ： gif路径
-   * @param width ：宽
-   * @param height ：高
    */
-  setAni( url: string, width: number, height: number){
-    this.createAnimation(url, this.x, this.y, width, height)
+  setAni( url: string ){
+    this.createAnimation(url, this.x, this.y, this.width, this.height)
   }
 
   /**

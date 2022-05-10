@@ -121,9 +121,12 @@ export default class Render{
     this.clear();
     this.renderStatic();
     this.renderAnimation();
-    this.updateGameObject(deltaTime - this.timeStamp);
     this.handlecollision();
-    this.timeStamp = deltaTime;
+    // this.updateGameObject(deltaTime - this.timeStamp);
+    // 这里必须固定时间，不然会因为每次时间的不同导致一些意想不到的bug;
+    // 这里先前是 计算完所以完成时间的。现在改为固定
+    this.updateGameObject(GAME.REFRESH_FRAME_TIME);
+    // this.timeStamp = deltaTime;
     window.requestAnimationFrame((deltaTime: number)=>{
       this.render(deltaTime);
     })

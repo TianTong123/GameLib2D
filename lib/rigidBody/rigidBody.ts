@@ -50,12 +50,11 @@ export default class RigidBody {
 
   /** 
    * 获取投影半径
+   * 单位向量乘向量得到对应轴投影
    */
    public getProjectionRadius(axis: Vector): number {
-
     let projectionAxisX: number = axis.dot(this.axisX);
     let projectionAxisY: number = axis.dot(this.axisY);
-
     return this.halfWidth * this.scaleX * projectionAxisX + this.halfHeight * this.scaleY * projectionAxisY;
   }
 
@@ -64,9 +63,9 @@ export default class RigidBody {
    * 两个矩形的投影半径相加小于矩形中心点向量的投影的长度的话。说明这两个矩形在这轴并没有相交。
    */
   public checkCollision(rigidBody: RigidBody) {
-    if(!rigidBody){
-      return false;
-    }
+    // if(!rigidBody){
+    //   return false;
+    // }
 
     // 向量相减
     let centerDistanceVertor:Vector = this.centerPoint.substract(rigidBody.centerPoint);
@@ -75,8 +74,8 @@ export default class RigidBody {
     let axes: Vector[] = [
       this.axisX,
       this.axisY,
-      rigidBody.axisX,
-      rigidBody.axisY
+      // rigidBody.axisX,
+      // rigidBody.axisY
     ];
 
     // 只要有轴没有相交，就认为没有碰撞
@@ -110,6 +109,8 @@ export default class RigidBody {
     this.axisX = new Vector(Math.cos(rotation), Math.sin(rotation));
     this.axisY = new Vector(-Math.sin(rotation), Math.cos(rotation));
     
+    this.getProjectionRadius(this.axisX);
+    this.getProjectionRadius(this.axisY);
     this.setCenter();
   }
 
@@ -117,17 +118,21 @@ export default class RigidBody {
    * 设置中心点
    */
   public setCenter() {
-    let offsetAxisPoint: Vector = new Vector(this.gameObject.x - GAME.VIEW_WIDTH, this.gameObject.y - GAME.VIEW_HEIGHT);
+    // let offsetAxisPoint: Vector = new Vector(this.gameObject.x - GAME.VIEW_WIDTH, this.gameObject.y - GAME.VIEW_HEIGHT);
     
     // 计算中心点到原点距离 y = √ x² + y²
-    this.offsetAxisPointDistance = Math.sqrt(offsetAxisPoint.dot(offsetAxisPoint));
+    //this.offsetAxisPointDistance = Math.sqrt(offsetAxisPoint.dot(offsetAxisPoint));
+
+    // console.log( this.offsetAxisPointDistance);
     
     // 计算这个中心点到原点距离在x轴上的长度
-    let offsetX: number = this.offsetAxisPointDistance * Math.cos(this.rotation);
+    //let offsetX: number = this.offsetAxisPointDistance * Math.cos(this.rotation);
 
     // 计算这个中心点到原点距离在y轴上的长度
-    let offsetY: number = this.offsetAxisPointDistance * Math.sin(this.rotation);
+    //let offsetY: number = this.offsetAxisPointDistance * Math.sin(this.rotation);
 
-    this.centerPoint = new Vector(offsetX, offsetY + this.gameObject.y);
+    // console.log(GAME.VIEW_WIDTH-(this.gameObject.x + this.halfWidth)  ,this.gameObject.y + this.halfHeight );
+    // this.centerPoint = new Vector(offsetX - this.gameObject.width*1.5, offsetY + this.gameObject.y + this.halfHeight);
+    this.centerPoint = new Vector(GAME.VIEW_WIDTH-(this.gameObject.x + this.halfWidth)  ,this.gameObject.y + this.halfHeight );
   }
 }

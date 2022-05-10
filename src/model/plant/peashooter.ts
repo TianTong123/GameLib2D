@@ -17,7 +17,7 @@ export default class Peashooter extends Plant {
     this.y = this.getOffsetY();
     this.width = width || 60;
     this.height = height || 69;
-    this.setAni(require("@/assets/plant/Peashooter.gif"), this.width, this.height);
+    this.setAni(require("@/assets/plant/Peashooter.gif"));
     // this.createRigidBody();
     // this.setGravity(true);
   }

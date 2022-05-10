@@ -58,11 +58,13 @@ export default class Bullet extends Plant {
     this.column = args.column;
     this.x = this.getOffsetX(args.offsetX);
     this.y = this.getOffsetY(args.offsetY);
-    this.createView(require("@/assets/bullet/PB00.png"), this.x, this.y, args.width, args.height);
+    this.width = args.width || 60;
+    this.height = args.height || 69;
+    this.createView(require("@/assets/bullet/PB00.png"), this.x, this.y, this.width, this.height);
     this.createRigidBody();
     // this.forceX = 1;
     this.setGravity(true);
-    this.setVX(this.speed)
+    this.setVX(this.speed);
   }
 
   /**

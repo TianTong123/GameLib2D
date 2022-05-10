@@ -65,11 +65,13 @@ export default abstract class GameObject implements GameBase {
 
     // 每帧处理方法
     public handleUpdate(deltaTime: number): void{
-        let time = deltaTime / 100;
+        // console.log();
+        
+        // let time = deltaTime / 100;
         // X轴上力的处理
-        this.handleForceX(time);
+        this.handleForceX(deltaTime);
         // Y轴上力的处理
-        this.handleForceY(time);
+        this.handleForceY(deltaTime);
         // 更新刚体投影坐标
         this.rigidBody?.setCenter();
         // 调用一次更新事件

@@ -17,7 +17,7 @@ export default class Sunflower extends Plant{
       this.y = this.getOffsetY();
       this.width = width || 60;
       this.height = height || 69;
-      this.setAni(require("@/assets/plant/sunflower.gif"), this.width, this.height);
+      this.setAni(require("@/assets/plant/sunflower.gif"));
       this.createRigidBody();
     }
     

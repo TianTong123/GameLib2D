@@ -18,6 +18,8 @@ export default class GAME {
   public static RENDER: Render;
   // 帧数: 现在为60帧
   public static REFRESH_FRAME: number = 1000/60;
+  // 固定刷新时间
+  public static REFRESH_FRAME_TIME: number = 1000/60/100;
   // 当前活动的场景
   public static ACTIVE_SCENE: Scene;
   // 初始化
