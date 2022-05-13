@@ -22,6 +22,9 @@ export default class GAME {
   public static REFRESH_FRAME_TIME: number = 1000/60/100;
   // 当前活动的场景
   public static ACTIVE_SCENE: Scene;
+  // 能量衰减百分比。即碰撞后所损失的能量。1则为弹性碰撞。能量不损失。一直动， 最小值为0
+  public static ENERGY_ATTENUATION_PERCENTAGE = 0.85;
+
   // 初始化
   public static init(): void{
     this.RENDER = new Render(this.BASE_X_Offset, this.BASE_Y_Offset, this.VIEW_WIDTH, this.VIEW_HEIGHT);

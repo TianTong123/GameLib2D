@@ -5,6 +5,7 @@ import RigidBody from "../rigidBody/rigidBody";
 import GameAnimation from "../animation/gameAnimation";
 const { v4: uuidv4 } = require('uuid');
 import Scene from "../scene/scene";
+import Vector from "../util/vector";
 /**
  * 游戏对象抽象类
  */
@@ -28,6 +29,9 @@ export default abstract class GameObject implements GameBase {
 
     // 刚体
     public rigidBody?: RigidBody;
+    
+    // 是否进行物理处理 默认不开启
+    private isHandlePhysics: boolean = false;
 
     // x轴上的力
     public forceX: number = 0;
@@ -105,20 +109,104 @@ export default abstract class GameObject implements GameBase {
         this.view?.setY(this.y);
     }
 
-    // 处理碰撞 (东西多再分)
-    // obj： 撞的对象，  
-    // direction： 撞的方向 vertical垂直方向， horizontal：水平方向
-    public handleCollision( obj: GameObject, direction: string ): void{
+    // 处理垂直碰撞 
+    // obj： 撞的对象 distanceV: 嵌进去的垂直距离
+    public handleVerticalCollision( obj: GameObject, distanceV: number): void{
+        if(this.isHandlePhysics){
+            // 动量动能守恒处理
+            this.conservationOfMomentum(obj);
+
+            // 碰墙处理
+            if(!obj.isHandlePhysics){
+                // 碰撞后的物理处理
+                this.vy = -this.vy * GAME.ENERGY_ATTENUATION_PERCENTAGE;
+            }
+            this.y += this.vy >= 0 ? distanceV : -distanceV;//防止一直下落
+        }
         
-        // 碰撞后的物理处理
-        if(direction == "vertical"){
-            this.vy = -this.vy;
-        }
-        if(direction == "horizontal"){
-            this.vx = -this.vx;
-        }
         // 调用碰撞
-        this.collision(obj)
+        this.collision(obj);
+
+        // 更新对象
+        this.handleUpdate(GAME.REFRESH_FRAME_TIME);
+    }
+
+    // 处理水平碰撞
+    // obj： 撞的对象，  distanceV: 嵌进去的水平距离
+    public handleHorizontalCollision( obj: GameObject, distanceV: number ): void{
+        if(this.isHandlePhysics){
+            // 动量动能守恒处理
+            this.conservationOfMomentum(obj);
+            
+            // 碰墙处理
+            if(!obj.isHandlePhysics){
+                // 碰撞后的物理处理
+                this.vx = -this.vx * GAME.ENERGY_ATTENUATION_PERCENTAGE;
+            }
+            this.x += this.vx >= 0 ? distanceV : -distanceV;//防止一直下落
+        }
+        
+        // 调用碰撞
+        this.collision(obj);
+
+        // 更新对象
+        this.handleUpdate(GAME.REFRESH_FRAME_TIME)
+    }
+
+    // 动量守恒
+    private conservationOfMomentum( obj: GameObject): void{
+        // 只对开启物理处理的对象经行动量守恒
+        if(!obj.getHandlePhysic()){
+            return
+        }
+        console.log("寄");
+        
+        // 创建两小球的速度向量 
+        let velocity: Vector = new Vector(this.vx, this.vy);
+        let velocityObj: Vector = new Vector(obj.getVX(), obj.getVY());
+        // 连心线方向的向量
+        let velocitNorm: Vector = new Vector(this.x - obj.x, this.y - obj.y);
+        //接下来获取连心线方向的单位向量和切线方向上的单位向量，这些单位向量代表的是连心线和切线的方向：
+        let unitVNorm: Vector = velocitNorm.normalize();
+        let unitVTan: Vector = new Vector(-unitVNorm.y, unitVNorm.x);
+        
+        // 求各自速度的投影长度
+        // 自己的
+        let v1n: number = velocity.dot(unitVNorm);
+        let v1t: number = velocity.dot(unitVTan);
+        // 对面的
+        let v2n: number = velocityObj.dot(unitVNorm);
+        let v2t: number = velocityObj.dot(unitVTan);
+
+        // 各自碰撞后的速度（这里是联立动能/动量守恒推出的公式，详情看百度）
+        // v₁′ = ( (m₁ - m₂)v₂ + 2m₂v₂ ) / m₁ + m₂
+        let v1nAfter = (v1n * (this.mass - obj.mass) + 2 * obj.mass * v2n) / (this.mass + obj.mass);
+        let v2nAfter = (v2n * (obj.mass - this.mass) + 2 * this.mass * v1n) / (this.mass + obj.mass);
+
+        if (v1nAfter < v2nAfter) {
+            return;
+        }
+        
+        // 单位向量加长度，变成正常向量
+        // 自己的
+        let v1VectorNorm: Vector = unitVNorm.multiply(v1nAfter);
+        let v1VectorTan: Vector = unitVTan.multiply(v1t);
+        // 对面的
+        let v2VectorNorm: Vector = unitVNorm.multiply(v2nAfter);
+        let v2VectorTan: Vector = unitVTan.multiply(v2t);
+
+        // 两个方向合起来得到合速度（合向量）
+        let velocity1After: Vector = v1VectorNorm.add(v1VectorTan);
+        let velocity2After: Vector = v2VectorNorm.add(v2VectorTan);
+
+        // 赋值速度
+        // 给自己赋值
+        this.vx = velocity1After.x * GAME.ENERGY_ATTENUATION_PERCENTAGE;
+        this.vy = velocity1After.y * GAME.ENERGY_ATTENUATION_PERCENTAGE;
+        // 给对面赋值
+        obj.setVX(velocity2After.x);
+        obj.setVY(velocity2After.y)
+
     }
 
     // 创建 view
@@ -159,5 +247,23 @@ export default abstract class GameObject implements GameBase {
     // 设置v
     public setVX( val: number ): void{
         this.vx = val;
+    }
+    public getVX(): number{
+        return this.vx
+    }
+
+    public setVY( val: number ): void{
+        this.vy = val;
+    }
+    public getVY(): number{
+        return this.vy
+    }
+    
+    // 是否启用物理处理， true启用
+    public setHandlePhysics( val: boolean ): void{
+        this.isHandlePhysics = val;
+    }
+    public getHandlePhysic(): boolean{
+        return this.isHandlePhysics
     }
 }

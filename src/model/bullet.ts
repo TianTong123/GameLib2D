@@ -64,6 +64,7 @@ export default class Bullet extends Plant {
     this.createRigidBody();
     // this.forceX = 1;
     this.setGravity(true);
+    this.setHandlePhysics(true);
     this.setVX(this.speed);
   }
 
@@ -75,7 +76,7 @@ export default class Bullet extends Plant {
     // this.x =  this.x + this.speed * deltaTime / 1000;// (1000/60/1000);
     // this.view?.setX(this.x);
     // 飞出距离就注销
-    if((this.x || 0) > 830){
+    if(this.x  > 830 || this.y > 700){
       // console.log("寄了");
       this.destroy();
     }

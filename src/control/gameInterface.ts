@@ -7,6 +7,9 @@ import Sunflower from "../model/plant/sunflower";
 import View from "../../lib/view/view";
 import Peashooter from "../model/plant/peashooter";
 import Bullet from "../model/bullet";
+import GameObject from "../../lib/model/gameObject";
+import Plane from "../model/plant/plane";
+import Wall from "../model/plant/wall";
 /**
  * 游戏界面
  */
@@ -24,7 +27,7 @@ export default class GameInterface {
 
         // 添加素材
         let bg: View = new View(require("@/assets/interface/background1.jpg"), 0, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
-        scene.addView(bg);
+        // scene.addView(bg);
         // new Sunflower(0,  0);
         // new Sunflower(0,  1);
         // new Sunflower(0,  2);
@@ -52,11 +55,15 @@ export default class GameInterface {
         // new Peashooter(2,  4);
 
         // new Sunflower(0,  0);
-        new Sunflower(2,  4);
+        
         new Sunflower(0,  2);
-        new Sunflower(6,  0);
-        new Sunflower(4,  3 );
-        new Sunflower(7,  3 );
+        new Sunflower(0,  3);
+        new Sunflower(5,  1);
+        // new Sunflower(4,  3 );
+        // new Sunflower(7,  3 );
+
+        new Plane(0, 4);
+        new Wall(8,0);
         // setTimeout(async ()=>{
         //     new Peashooter(3,  1)
         // }, 500)
@@ -74,6 +81,7 @@ export default class GameInterface {
         // }, 2500)
         // 加载资源
         // await scene.loadAssets();
+
         // 启动
         scene.start();
     }
