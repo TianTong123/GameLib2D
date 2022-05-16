@@ -23,7 +23,7 @@ export default class GAME {
   // 当前活动的场景
   public static ACTIVE_SCENE: Scene;
   // 能量衰减百分比。即碰撞后所损失的能量。1则为弹性碰撞。能量不损失。一直动， 最小值为0
-  public static ENERGY_ATTENUATION_PERCENTAGE = 0.85;
+  public static ENERGY_ATTENUATION_PERCENTAGE = 0.7;
 
   // 初始化
   public static init(): void{
