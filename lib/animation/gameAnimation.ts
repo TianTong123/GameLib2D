@@ -34,7 +34,7 @@ export default class GameAnimation implements GameBase{
     this.width = width || 0;
     this.height = height || 0;
     this.url = url;
-    this.load();
+    // this.load();
   }
 
   // 加载方法
@@ -47,7 +47,7 @@ export default class GameAnimation implements GameBase{
         this.tempCanvas = res.getTempCanvas();
         this.width = this.width || this.tempCanvas.width;
         this.height = this.height || this.tempCanvas.height;
-        GAME.ACTIVE_SCENE.addAnimation(this);
+        // GAME.ACTIVE_SCENE.addAnimation(this);
         resolve(new Result(1, "加载成功", "success"));
       }).catch( err => {
         reject(new Result(0, "加载失败", "error"));

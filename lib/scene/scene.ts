@@ -4,6 +4,7 @@ import GameObject from "../model/gameObject";
 import Result from "../model/result";
 import GAME from "../game";
 import RigidBody from "../rigidBody/rigidBody";
+import UIObject from "../ui/UIObject";
 /**
  * 场景类
  */
@@ -15,7 +16,7 @@ export default class Scene{
   // 动画资源
   public ANIMATION_LIST: Array<GameAnimation> = [];
   // UI资源
-  public UI_LIST: any = [];
+  public UI_LIST: Array<UIObject> = [];
   // 刚体数组
   public RIGIDBODY_LIST: Array<RigidBody> = [];
 
@@ -70,13 +71,13 @@ export default class Scene{
   }
 
   // 添加UI资源
-  public addUI( ui: any ): void{
+  public addUI( ui: UIObject ): void{
     this.UI_LIST.push( ui );
   }
 
   // 移除UI资源
   public deleteUI( id: string ): void{
-    // this.UI_LIST = this.UI_LIST.filter( e => e.id !== id );
+    this.UI_LIST = this.UI_LIST.filter( e => e.id !== id );
   }
 
   // 添加静态资源
@@ -90,7 +91,7 @@ export default class Scene{
   }
 
    // 添加静态资源
-   public addRigidbody( rigidBody: RigidBody ): void{
+  public addRigidbody( rigidBody: RigidBody ): void{
     this.RIGIDBODY_LIST.push( rigidBody );
   }
 

@@ -10,6 +10,7 @@ import Bullet from "../model/bullet";
 import GameObject from "../../lib/model/gameObject";
 import Plane from "../model/plant/plane";
 import Wall from "../model/plant/wall";
+import UIObject from "../../lib/ui/UIObject";
 /**
  * 游戏界面
  */
@@ -64,6 +65,9 @@ export default class GameInterface {
 
         new Plane(0, 4);
         new Wall(8,0);
+
+
+        new UIObject(require("@/assets/UI/Button.png"), 0, 0, 50, 30);
         // setTimeout(async ()=>{
         //     new Peashooter(3,  1)
         // }, 500)

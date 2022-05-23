@@ -3,6 +3,7 @@ import GameAnimation from "../animation/gameAnimation";
 import GAME from "../game";
 import GameObject from "../model/gameObject";
 import RigidBody from "../rigidBody/rigidBody";
+import UIObject from "../ui/UIObject";
 /**
  * 渲染类
  */
@@ -28,7 +29,7 @@ export default class Render{
   // 动画资源
   private animationList: Array<GameAnimation> = [];
   // UI资源
-  private uiList: any = [];
+  private UIList: UIObject[] = [];
   // gameObject资源
   private gameObjectList: Array<GameObject> = [];
   // 刚体数组
@@ -70,6 +71,25 @@ export default class Render{
     canvas.height = height;
     canvas.setAttribute("style", `left: ${x}px; top: ${y}px; position: absolute;`);
     this.CTX = canvas.getContext('2d') as CanvasRenderingContext2D;
+    // 点击事件
+    canvas.addEventListener("click", (e: MouseEvent) => {
+      // console.log("点击事件");
+      
+      this.handleCanvasMouseEvent(e, "click");
+    });
+    // 鼠标按下事件
+    canvas.addEventListener("mousedown", (e: MouseEvent) => {
+      // console.log("鼠标按下");
+      // this.handleCanvasMouseEvent(e)
+    })
+    canvas.addEventListener("mouseup", (e: MouseEvent) => {
+      // console.log("鼠标释放");
+      // this.handleCanvasMouseEvent(e)
+    })
+    // 留着做拖动事件再弄这个
+    // document.addEventListener("mousemove", (e: MouseEvent) => {
+    //   console.log("鼠标移动");
+    // })
     document.body.append(canvas);
   }
 
@@ -83,6 +103,18 @@ export default class Render{
       this.CTX_STATIC.drawImage(view.getImg(), view.getX(), view.getY(), view.getWidth(), view.getHeight()); 
     }
     this.CTX.drawImage(this.CANVAS_STATIC, 0, 0);
+  }
+
+  /**
+   * 渲染UI方法
+   * 把 UIList 全部放到 canvas 上
+   */
+   public renderUI() {
+    for(let i = 0, len = this.UIList.length; i < len; i ++){
+      let view: View = this.UIList[i].view;
+      this.CTX_UI.drawImage(view.getImg(), view.getX(), view.getY(), view.getWidth(), view.getHeight()); 
+    }
+    this.CTX.drawImage(this.CANVAS_UI, 0, 0);
   }
 
   /**
@@ -121,12 +153,13 @@ export default class Render{
     this.clear();
     this.renderStatic();
     this.renderAnimation();
+    this.renderUI();
     this.handlecollision();
-    // this.updateGameObject(deltaTime - this.timeStamp);
+    // this.updateGameObject((deltaTime - this.timeStamp)/100);
     // 这里必须固定时间，不然会因为每次时间的不同导致一些意想不到的bug;
     // 这里先前是 计算完所以完成时间的。现在改为固定
     this.updateGameObject(GAME.REFRESH_FRAME_TIME);
-    // this.timeStamp = deltaTime;
+    this.timeStamp = deltaTime;
     window.requestAnimationFrame((deltaTime: number)=>{
       this.render(deltaTime);
     })
@@ -151,19 +184,20 @@ export default class Render{
     this.CTX.clearRect(0, 0, this.width, this.height);
     this.CTX_ANIMATION.clearRect(0, 0, this.width, this.height);
     this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
+    this.CTX_UI.clearRect(0, 0, this.width, this.height);
   }
 
   /**
    * 设置四个数组
    * 后面来细拆
    */
-  public setList( staticList: Array<View>, animationList: Array<GameAnimation>, uiList: any, gameObjectList: Array<GameObject>, rigidbodyList: Array<RigidBody>): void{
+  public setList( staticList: Array<View>, animationList: Array<GameAnimation>, UIList: any, gameObjectList: Array<GameObject>, rigidbodyList: Array<RigidBody>): void{
     // 静态资源
     this.staticList = staticList;
     // 动画资源
     this.animationList= animationList;
     // UI资源
-    this.uiList = uiList;
+    this.UIList = UIList;
     // gameObject 资源
     this.gameObjectList = gameObjectList;
     // 刚体资源
@@ -180,5 +214,20 @@ export default class Render{
   public destroyView(view: View): void{
     // 过滤掉
     this.staticList = this.staticList.filter( e => e.getId() != view.getId());
+  }
+
+  /**
+   * canvas 的事件处理
+   * @param e: MouseEvent
+   * @param type : 区别是那些事件
+   */
+  private handleCanvasMouseEvent(e: MouseEvent, type: string): void{
+    // 还原游戏坐标
+    
+    let x: number = e.clientX - GAME.BASE_X_Offset;
+    let y: number = e.clientY - GAME.BASE_Y_Offset;
+    console.log("===>", x,y);
+    // 查找对应的ui资源
+    
   }
 }

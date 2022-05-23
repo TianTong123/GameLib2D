@@ -53,7 +53,7 @@ export default class View{
   public loadImage(): Promise<Result<String>>{
     return new Promise((resolve, reject) => {
       this.img.onload = () => { 
-        GAME.ACTIVE_SCENE.addView(this);
+        // GAME.ACTIVE_SCENE.addView(this);
         resolve(new Result(1, "加载成功", "success"));          
       };
       this.img.onerror = (e) =>{

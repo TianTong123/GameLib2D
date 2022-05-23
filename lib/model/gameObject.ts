@@ -3,9 +3,10 @@ import GameBase from "../interface/gameBase";
 import View from "../view/view";
 import RigidBody from "../rigidBody/rigidBody";
 import GameAnimation from "../animation/gameAnimation";
-const { v4: uuidv4 } = require('uuid');
 import Scene from "../scene/scene";
 import Vector from "../util/vector";
+import Result from "./result";
+const { v4: uuidv4 } = require('uuid');
 /**
  * 游戏对象抽象类
  */
@@ -69,7 +70,6 @@ export default abstract class GameObject implements GameBase {
 
     // 每帧处理方法
     public handleUpdate(deltaTime: number): void{
-        // console.log();
         
         // let time = deltaTime / 100;
         // X轴上力的处理
@@ -111,10 +111,13 @@ export default abstract class GameObject implements GameBase {
 
     // 处理垂直碰撞 
     // obj： 撞的对象 distanceV: 嵌进去的垂直距离
-    public handleVerticalCollision( obj: GameObject, distanceV: number): void{
+    public handleVerticalCollision( obj: GameObject, distanceV: number, distanceH: number): void{
         if(this.isHandlePhysics){
             // 复位处理
             this.y += this.vy >= 0 ? -distanceV : distanceV;//防止一直下落
+            // console.log("distanceV: ",distanceV, distanceH);
+
+            // this.x += this.vx >= 0 ? -distanceH : distanceH;//防止卡墙
 
             // 动量动能守恒处理
             this.conservationOfMomentum(obj);
@@ -136,11 +139,13 @@ export default abstract class GameObject implements GameBase {
 
     // 处理水平碰撞
     // obj： 撞的对象，  distanceH: 嵌进去的水平距离
-    public handleHorizontalCollision( obj: GameObject, distanceH: number ): void{
+    public handleHorizontalCollision( obj: GameObject, distanceV: number, distanceH: number ): void{
         if(this.isHandlePhysics){
             // 复位处理
             this.x += this.vx >= 0 ? -distanceH : distanceH;//防止卡墙
-
+            // console.log("distanceH: ",distanceH, distanceH);
+            // this.y += this.vy >= 0 ? -distanceV : distanceV;//防止一直下落
+            
             // 动量动能守恒处理
             this.conservationOfMomentum(obj);
             
@@ -187,6 +192,8 @@ export default abstract class GameObject implements GameBase {
         // 各自碰撞后的速度标量（这里是联立动能/动量守恒推出的公式）
         // v₁′ = ( (m₁ - m₂)v₂ + 2m₂v₂ ) / m₁ + m₂
         let v1ScalarAfter = (v1Heart * (this.mass - obj.mass) + 2 * obj.mass * v2Heart) / (this.mass + obj.mass);
+        
+        // 复原
 
         // 单位向量加长度，变成正常向量
         // 自己的
@@ -207,7 +214,8 @@ export default abstract class GameObject implements GameBase {
     public createView(imgUrl: string, x: number, y: number, width: number, height: number): void {
         this.view = new View(imgUrl, x, y, width, height);
         this.view.setId(this.id);
-        this.view.loadImage();
+        this.view.loadImage(); // 这个返回的是promise, 如果有出现加载bug就用 await 接一下
+        GAME.ACTIVE_SCENE.addView(this.view);
     }
 
     // 创建刚体(先以当前当前大小位置作为刚体大小位置)
@@ -219,7 +227,11 @@ export default abstract class GameObject implements GameBase {
     // 创建动画
     public createAnimation(url: string, x?: number, y?: number, width?: number, height?: number): void {
         this.animation = new GameAnimation( url, x, y, width, height );
-        this.animation.id = this.id;
+        this.animation.id = this.id; 
+        // 加载完成后放进animation
+        this.animation.load().then( (res: Result<String>) => {
+            GAME.ACTIVE_SCENE.addAnimation( this.animation as GameAnimation );
+        });
     }
 
     // 是否使用重力

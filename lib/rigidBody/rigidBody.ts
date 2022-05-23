@@ -54,9 +54,9 @@ export default class RigidBody {
    * 两个矩形的投影半径相加小于矩形中心点向量的投影的长度的话。说明这两个矩形在这轴并没有相交。
    */
   public checkCollision(rigidBody: RigidBody) {
-    // if(!rigidBody){
-    //   return false;
-    // }
+    if(!rigidBody){
+      return false;
+    }
 
     // 向量相减
     let centerDistanceVertor:Vector = this.centerPoint.substract(rigidBody.centerPoint);
@@ -81,15 +81,15 @@ export default class RigidBody {
     const distanceH: number = this.getProjectionRadius(axes[0]) + rigidBody.getProjectionRadius(axes[0]) - centerDistanceVertor.dot(axes[0]);
     const distanceV: number = this.getProjectionRadius(axes[1]) + rigidBody.getProjectionRadius(axes[1]) - centerDistanceVertor.dot(axes[1])
     if( distanceH < distanceV){
-          // 水平相撞
-          this.gameObject.handleHorizontalCollision(rigidBody.gameObject, distanceH);
-          rigidBody.gameObject.handleHorizontalCollision(this.gameObject, distanceH);
-          return
+      // 水平相撞
+      this.gameObject.handleHorizontalCollision(rigidBody.gameObject, distanceV, distanceH);
+      rigidBody.gameObject.handleHorizontalCollision(this.gameObject, distanceV, distanceH);
+      return
     }
     
     // 垂直相撞
-    this.gameObject.handleVerticalCollision(rigidBody.gameObject, distanceV);
-    rigidBody.gameObject.handleVerticalCollision(this.gameObject, distanceV);
+    this.gameObject.handleVerticalCollision(rigidBody.gameObject, distanceV, distanceH);
+    rigidBody.gameObject.handleVerticalCollision(this.gameObject, distanceV, distanceH);
   }
 
   /** 
@@ -112,6 +112,6 @@ export default class RigidBody {
    * gameobject会调用这个更新中心坐标
    */
   public setCenter() {
-    this.centerPoint = new Vector(GAME.VIEW_WIDTH-(this.gameObject.x + this.halfWidth)  ,this.gameObject.y + this.halfHeight );
+    this.centerPoint = new Vector(GAME.VIEW_WIDTH-(this.gameObject.x + this.halfWidth), this.gameObject.y + this.halfHeight );
   }
 }
