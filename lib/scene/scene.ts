@@ -72,6 +72,7 @@ export default class Scene{
 
   // 添加UI资源
   public addUI( ui: UIObject ): void{
+    
     this.UI_LIST.push( ui );
   }
 
