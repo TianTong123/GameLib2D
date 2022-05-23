@@ -56,11 +56,9 @@ export default class UIObject implements GameBase{
     let halfWidth: number = this.width / 2;
     let halfHeight: number = this.height / 2;
     let centerPoint: Vector = new Vector(GAME.VIEW_WIDTH-(this.x + halfWidth), this.y + halfHeight );
-    let targetX = point.x;
-    let targetY = point.y;
-    let r = -this.rotation * (Math.PI / 180);
-    let nTempX = centerPoint.x + (targetX - centerPoint.x) * Math.cos(r) - (targetY - centerPoint.y) * Math.sin(r);
-    let nTempY = centerPoint.y + (targetX - centerPoint.x) * Math.sin(r) + (targetY - centerPoint.y) * Math.cos(r);
+    let r: number = -this.rotation * (Math.PI / 180);
+    let nTempX: number = centerPoint.x + (point.x - centerPoint.x) * Math.cos(r) - (point.y - centerPoint.y) * Math.sin(r);
+    let nTempY: number = centerPoint.y + (point.x - centerPoint.x) * Math.sin(r) + (point.y - centerPoint.y) * Math.cos(r);
     if (nTempX > centerPoint.x - halfWidth && nTempX < centerPoint.x + halfWidth && nTempY > centerPoint.y - halfHeight && nTempY < centerPoint.y + halfHeight) {
       this.click()
     }
