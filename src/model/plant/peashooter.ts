@@ -1,3 +1,6 @@
+import GAME from "../../../lib/game";
+import Input from "../../../lib/input/input";
+import { KEYCODE } from "../../../lib/input/keyCode";
 import GameObject from "../../../lib/model/gameObject";
 import Bullet from "../bullet";
 import Plant from "../plant";
@@ -44,7 +47,17 @@ export default class Peashooter extends Plant {
    * 攻击方法
    */
   update(deltaTime: number): void {
-    this.time += 1000/60;
+    if(Input.getKeyDown(KEYCODE.Control_L)){
+      console.log("我按ctrl了");
+      
+    }
+    if(Input.getKeyDown(KEYCODE.A)){
+      console.log("我按 a了");
+    }
+    // Input.getHorizontalAxis(); Input.getVerticallAxis()
+    console.log(Input.getHorizontalAxis(), Input.getVerticallAxis());
+    
+    this.time += GAME.REFRESH_FRAME_TIME * 100;
     if( this.time / 3000 > 1){
       new Bullet({
         name: "PB00",

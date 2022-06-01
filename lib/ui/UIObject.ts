@@ -43,7 +43,7 @@ export default class UIObject implements GameBase{
 
   // 点击事件
   public click(): void{
-    console.log("我被点了", this)
+    console.log("我被点了", this);
   }
 
   /**
@@ -55,8 +55,10 @@ export default class UIObject implements GameBase{
     // rigidbody 的常规操作，取一半，拿中心点
     let halfWidth: number = this.width / 2;
     let halfHeight: number = this.height / 2;
-    let centerPoint: Vector = new Vector(GAME.VIEW_WIDTH-(this.x + halfWidth), this.y + halfHeight );
+    let centerPoint: Vector = new Vector(this.x + halfWidth, this.y + halfHeight );
+    // 转换角度
     let r: number = -this.rotation * (Math.PI / 180);
+    // 拿到旋转后的坐标
     let nTempX: number = centerPoint.x + (point.x - centerPoint.x) * Math.cos(r) - (point.y - centerPoint.y) * Math.sin(r);
     let nTempY: number = centerPoint.y + (point.x - centerPoint.x) * Math.sin(r) + (point.y - centerPoint.y) * Math.cos(r);
     if (nTempX > centerPoint.x - halfWidth && nTempX < centerPoint.x + halfWidth && nTempY > centerPoint.y - halfHeight && nTempY < centerPoint.y + halfHeight) {

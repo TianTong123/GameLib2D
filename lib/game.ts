@@ -1,5 +1,6 @@
 import Scene from "./scene/scene";
 import Render from "./view/render";
+import Input from "./input/input";
 /**
  * 游戏类，设置属性
  */
@@ -33,6 +34,8 @@ export default class GAME {
 
   // 游戏启动
   public static start(): void{
+    // 启动键盘事件
+    Input.startLisEventListenerKeyboard();
     this.RENDER.startRender();
   }
 }

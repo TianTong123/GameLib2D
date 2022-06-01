@@ -4,6 +4,7 @@ import GAME from "../game";
 import GameObject from "../model/gameObject";
 import RigidBody from "../rigidBody/rigidBody";
 import UIObject from "../ui/UIObject";
+import Vector from "../util/vector";
 /**
  * 渲染类
  */
@@ -226,8 +227,10 @@ export default class Render{
     
     let x: number = e.clientX - GAME.BASE_X_Offset;
     let y: number = e.clientY - GAME.BASE_Y_Offset;
-    console.log("===>", x,y);
+    // console.log("===>", x,y);
     // 查找对应的ui资源
-    
+    for(let i = 0, len = this.UIList.length; i < len; i ++){
+      this.UIList[i].checkPosInRotationRect(new Vector(x, y));
+    }
   }
 }

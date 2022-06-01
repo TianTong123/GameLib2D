@@ -6,6 +6,7 @@ import GameAnimation from "../animation/gameAnimation";
 import Scene from "../scene/scene";
 import Vector from "../util/vector";
 import Result from "./result";
+import { KEYCODE } from "../input/keyCode";
 const { v4: uuidv4 } = require('uuid');
 /**
  * 游戏对象抽象类
