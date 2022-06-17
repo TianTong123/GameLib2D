@@ -8,6 +8,7 @@ import { KEYCODE } from "./keyCode";
 export default class Input {
   // 键盘按下对应的code值
   public static downKeyCode: number = -1;
+  // 横竖两轴
   public static downHorizontalKeyCode: number = -1;
   public static downVerticalKeyCode: number = -1;
   // 键盘释放对应的code值

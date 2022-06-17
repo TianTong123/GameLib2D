@@ -4,7 +4,7 @@
  */
 export default class Global {
     // 僵尸数组
-    public static ZOMBIE_LIST: any[]
+    public static ZOMBIE_LIST: []
     // 环境  day: 白天， night： 夜晚
     public static ENV: string;
     // 块的大小

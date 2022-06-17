@@ -54,16 +54,23 @@ export default class Peashooter extends Plant {
     if(Input.getKeyDown(KEYCODE.A)){
       console.log("我按 a了");
     }
+    if(Input.getHorizontalAxis()){
+      console.log("我按 横轴");
+    }
+    if(Input.getVerticallAxis()){
+      console.log("我按 纵轴");
+    }
     // Input.getHorizontalAxis(); Input.getVerticallAxis()
-    console.log(Input.getHorizontalAxis(), Input.getVerticallAxis());
+    // console.log(Input.getHorizontalAxis(), Input.getVerticallAxis());
+    // console.log(deltaTime, GAME.REFRESH_FRAME_TIME);
     
-    this.time += GAME.REFRESH_FRAME_TIME * 100;
+    this.time += GAME.REFRESH_FRAME_TIME;
     if( this.time / 3000 > 1){
       new Bullet({
         name: "PB00",
         isPierce: false,
         hurtValue: 50,
-        speed: 40,
+        speed: 30,
         isAll: true,
         range: -1,
         type: 0,

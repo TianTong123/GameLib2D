@@ -5,6 +5,7 @@ import Result from "../model/result";
 import GAME from "../game";
 import RigidBody from "../rigidBody/rigidBody";
 import UIObject from "../ui/UIObject";
+import Gif from "../gif/gif";
 /**
  * 场景类
  */
@@ -19,7 +20,12 @@ export default class Scene{
   public UI_LIST: Array<UIObject> = [];
   // 刚体数组
   public RIGIDBODY_LIST: Array<RigidBody> = [];
-
+  // 静态图片资源
+  private imgResources: HTMLImageElement[] = [];
+  // gif资源
+  private gifResources: Gif[] = [];
+  // 音乐资源
+  // .... 待扩展
   // 构造器
   constructor(){}
 
@@ -99,5 +105,10 @@ export default class Scene{
   // 移除静态资源
   public deleteRigidbody( id: string ): void{
     this.RIGIDBODY_LIST = this.RIGIDBODY_LIST.filter( e => e.id !== id );
+  }
+
+  // 添加gif对象
+  public addGif(gif: Gif): void{
+    this.gifResources.push(gif);
   }
 }

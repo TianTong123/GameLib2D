@@ -20,19 +20,25 @@ export default class RigidBody {
   // 单位向量
   private axisX: Vector;
   private axisY: Vector;
+  // 偏移量
+  private offsetX: number;
+  private offsetY: number;
 
-  constructor( gameObject: GameObject, rotation: number ){
+  constructor( gameObject: GameObject, rotation: number, width?: number, height?: number, offsetX?: number, offsetY?: number ){
     this.gameObject = gameObject;
 
-    this.halfWidth = gameObject.width / 2;
-    this.halfHeight = gameObject.height / 2;
+    this.halfWidth = (width || gameObject.width) / 2;
+    this.halfHeight = (height || gameObject.height) / 2;
 
     // 将坐标轴设置在 刚体 左上角。后面会移动至中心
     this.centerPoint = new Vector(gameObject.x, gameObject.y) ;
     
     this.axisX = new Vector(0, 0);
     this.axisY = new Vector(0, 0);
-    
+
+    this.offsetX = offsetX || 0;
+    this.offsetY = offsetY || 0;
+  
     // 矩形中心
     this.setRotation(rotation);
     
@@ -65,8 +71,8 @@ export default class RigidBody {
     let axes: Vector[] = [
       this.axisX,
       this.axisY,
-      // rigidBody.axisX,
-      // rigidBody.axisY
+      rigidBody.axisX,
+      rigidBody.axisY
     ];
 
     // 只要有轴没有相交，就认为没有碰撞
@@ -112,6 +118,6 @@ export default class RigidBody {
    * gameobject会调用这个更新中心坐标
    */
   public setCenter() {
-    this.centerPoint = new Vector(GAME.VIEW_WIDTH-(this.gameObject.x + this.halfWidth), this.gameObject.y + this.halfHeight );
+    this.centerPoint = new Vector(GAME.VIEW_WIDTH-(this.gameObject.x + this.halfWidth + this.offsetX), this.gameObject.y + this.halfHeight + this.offsetY );
   }
 }

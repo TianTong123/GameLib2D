@@ -13,7 +13,7 @@ export default class Gif {
   private CURRENT_FRAME_INDEX: number | undefined;
   private DELAY: number = 0;
   private TRANSPARENCY: any;
-
+  
   constructor() {
     this.TEMP_CANVAS = document.createElement("canvas");
     this.GIF_INFO = {};

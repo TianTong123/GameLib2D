@@ -21,14 +21,11 @@ export default class Bullet extends Plant {
   private range: number = -1;
   // 子弹类型 0 直线， 1曲线， 2原地 默认直线
   private type: number = 0;
-  // 背景
-  public bg: any = document.createElement("div");
   // 列
   public column: number = -1;
   // 行
   public row: number = -1;
-  //移动计时器
-  private moveTimer: any = null;
+
   // 构造器
   constructor(args: {
     name: string;
@@ -60,10 +57,10 @@ export default class Bullet extends Plant {
     this.y = this.getOffsetY(args.offsetY);
     this.width = args.width || 60;
     this.height = args.height || 69;
-    this.createView(require("@/assets/bullet/PB00.png"), this.x, this.y, this.width, this.height);
-    this.createRigidBody();
+    this.createAnimation(require("@/assets/bullet/PB001.gif"), this.x, this.y, this.width, this.height);
+    this.createRigidBody(14, 14, 12, 0);
     // this.forceX = 1;
-    this.setGravity(true);
+    // this.setGravity(true);
     this.setHandlePhysics(true);
     this.setVX(this.speed);
   }

@@ -18,15 +18,18 @@ export default class GAME {
   // 渲染
   public static RENDER: Render;
   // 帧数: 现在为60帧
-  public static REFRESH_FRAME: number = 1000/60;
+  public static REFRESH_FRAME: number = 60;
   // 固定刷新时间
-  public static REFRESH_FRAME_TIME: number = 1000/60/100;
+  public static REFRESH_FRAME_TIME: number = 1000/60;
   // 当前活动的场景
   public static ACTIVE_SCENE: Scene;
   // 能量衰减百分比。即碰撞后所损失的能量。1则为弹性碰撞。能量不损失。一直动， 最小值为0
   public static ENERGY_ATTENUATION_PERCENTAGE = 0.7;
   // 误差系数，小于这个就不处理了
   public static ERROR_COEFFICIENT = 0.03
+
+ 
+
   // 初始化
   public static init(): void{
     this.RENDER = new Render(this.BASE_X_Offset, this.BASE_Y_Offset, this.VIEW_WIDTH, this.VIEW_HEIGHT);
@@ -38,4 +41,6 @@ export default class GAME {
     Input.startLisEventListenerKeyboard();
     this.RENDER.startRender();
   }
+
+  
 }

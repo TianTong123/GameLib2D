@@ -10,12 +10,10 @@
 //     // 行
 //     public row: number = -1;
 //     // 背景
-//     public bg: any = document.createElement("div"); 
 //     // 阳光类型， 0小阳光 1中阳光 2 大阳光
 //     private type: number = 0;
 //     // 存活时间，设定为10秒
 //     private life: number = 15000;
-//     private lifeTimer: any = null;
 //     // 位置列表
 //     private poisitionList: Array<Point> = [
 //         new Point(0,  0 ),

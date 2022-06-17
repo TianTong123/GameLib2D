@@ -24,13 +24,13 @@ export default abstract class GameObject implements GameBase {
     public height: number = 0;
 
     // 视图
-    public view?: View;
+    private view?: View;
 
     // 动画
-    public animation?: GameAnimation;
+    private animation?: GameAnimation;
 
     // 刚体
-    public rigidBody?: RigidBody;
+    private rigidBody?: RigidBody;
     
     // 是否进行物理处理 默认不开启
     private isHandlePhysics: boolean = false;
@@ -72,11 +72,11 @@ export default abstract class GameObject implements GameBase {
     // 每帧处理方法
     public handleUpdate(deltaTime: number): void{
         
-        // let time = deltaTime / 100;
+        let time = deltaTime / 100;
         // X轴上力的处理
-        this.handleForceX(deltaTime);
+        this.handleForceX(time);
         // Y轴上力的处理
-        this.handleForceY(deltaTime);
+        this.handleForceY(time);
         // 更新刚体投影坐标
         this.rigidBody?.setCenter();
         // 调用一次更新事件
@@ -220,8 +220,8 @@ export default abstract class GameObject implements GameBase {
     }
 
     // 创建刚体(先以当前当前大小位置作为刚体大小位置)
-    public createRigidBody(): void {
-        this.rigidBody = new RigidBody( this, 0 );
+    public createRigidBody(width?: number, height?: number, offsetX?: number, offsetY?: number  ): void {
+        this.rigidBody = new RigidBody( this, 0, width, height, offsetX, offsetY );
         this.rigidBody.id = this.id;
     }
 

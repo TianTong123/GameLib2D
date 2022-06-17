@@ -5,13 +5,14 @@ export default class Stream {
   private data: any;
   private length: number;
   private poisition: number;
+  
   constructor(data: any) {
     this.data = data;
     this.length = data.length;
     this.poisition = 0;
   }
 
-  readByte() {
+  readByte(): number {
     if (this.poisition >= this.length) {
       throw new Error('Attempted to read past end of stream.');
     }
@@ -37,7 +38,7 @@ export default class Stream {
     return chars;
   };
 
-  readUnsigned() { // Little-endian.
+  readUnsigned(): number {
     let unsigned = this.readBytes(2);
     return (unsigned[1] << 8) + unsigned[0];
   };

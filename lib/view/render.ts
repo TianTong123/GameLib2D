@@ -76,16 +76,16 @@ export default class Render{
     canvas.addEventListener("click", (e: MouseEvent) => {
       // console.log("点击事件");
       
-      this.handleCanvasMouseEvent(e, "click");
+      this.handleCanvasMouseClickEvent(e, "click");
     });
     // 鼠标按下事件
     canvas.addEventListener("mousedown", (e: MouseEvent) => {
       // console.log("鼠标按下");
-      // this.handleCanvasMouseEvent(e)
+      // this.handleCanvasMouseClickEvent(e)
     })
     canvas.addEventListener("mouseup", (e: MouseEvent) => {
       // console.log("鼠标释放");
-      // this.handleCanvasMouseEvent(e)
+      // this.handleCanvasMouseClickEvent(e)
     })
     // 留着做拖动事件再弄这个
     // document.addEventListener("mousemove", (e: MouseEvent) => {
@@ -160,6 +160,7 @@ export default class Render{
     // 这里必须固定时间，不然会因为每次时间的不同导致一些意想不到的bug;
     // 这里先前是 计算完所以完成时间的。现在改为固定
     this.updateGameObject(GAME.REFRESH_FRAME_TIME);
+    // console.log(deltaTime, GAME.REFRESH_FRAME_TIME);
     this.timeStamp = deltaTime;
     window.requestAnimationFrame((deltaTime: number)=>{
       this.render(deltaTime);
@@ -192,7 +193,7 @@ export default class Render{
    * 设置四个数组
    * 后面来细拆
    */
-  public setList( staticList: Array<View>, animationList: Array<GameAnimation>, UIList: any, gameObjectList: Array<GameObject>, rigidbodyList: Array<RigidBody>): void{
+  public setList( staticList: Array<View>, animationList: Array<GameAnimation>, UIList: UIObject[], gameObjectList: Array<GameObject>, rigidbodyList: Array<RigidBody>): void{
     // 静态资源
     this.staticList = staticList;
     // 动画资源
@@ -222,12 +223,10 @@ export default class Render{
    * @param e: MouseEvent
    * @param type : 区别是那些事件
    */
-  private handleCanvasMouseEvent(e: MouseEvent, type: string): void{
+  private handleCanvasMouseClickEvent(e: MouseEvent, type: string): void{
     // 还原游戏坐标
-    
     let x: number = e.clientX - GAME.BASE_X_Offset;
     let y: number = e.clientY - GAME.BASE_Y_Offset;
-    // console.log("===>", x,y);
     // 查找对应的ui资源
     for(let i = 0, len = this.UIList.length; i < len; i ++){
       this.UIList[i].checkPosInRotationRect(new Vector(x, y));
