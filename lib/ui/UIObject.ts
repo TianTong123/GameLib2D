@@ -65,20 +65,6 @@ export default class UIObject implements GameBase{
     }
   }
 
-  // 创建view  url:图片地址
-  // public createView( url: string ): void {
-  //   this.view = new View(url, this.x, this.y, this.width, this.height);
-  //   this.view.setId(this.id);
-  //   this.view.loadImage(); // 这个返回的是promise, 如果有出现加载bug就用 await 接一下
-  //   GAME.ACTIVE_SCENE.addUI(this.view);
-  // }
-
-
-  // 添加已有view 暂定
-  public addView( view: View ): void{
-    // this.view = 
-  }
-
   // 注销方法
   public destroy(): void{
     // 后续更正为只保留gameObjectList, 其他数组就用map来取

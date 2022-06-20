@@ -11,6 +11,7 @@ import GameObject from "../../lib/model/gameObject";
 import Plane from "../model/plant/plane";
 import Wall from "../model/plant/wall";
 import UIObject from "../../lib/ui/UIObject";
+import NormalZombie from "../model/zombie/normalZombie";
 /**
  * 游戏界面
  */
@@ -32,6 +33,7 @@ export default class Panel {
         scene.addGifInfo(require("@/assets/plant/sunflower.gif"));
         scene.addGifInfo(require("@/assets/bullet/PB001.gif"));
         scene.addGifInfo(require("@/assets/plant/Peashooter.gif"));
+        scene.addGifInfo(require("@/assets/zombie/Zombie3.gif"));
         // 加载资源
         await scene.loadAssets();
         
@@ -79,6 +81,8 @@ export default class Panel {
         new Peashooter(2,  3);
         new Peashooter(2,  4);
 
+        new NormalZombie(8,  2);
+
         // new Peashooter(4,  0);
         // new Peashooter(4,  1);
         // new Peashooter(4,  2);
@@ -91,11 +95,11 @@ export default class Panel {
         // new Peashooter(5,  3);
         // new Peashooter(5,  4);
 
-        new Peashooter(6,  0);
-        new Peashooter(6,  1);
-        new Peashooter(6,  2);
-        new Peashooter(6,  3);
-        new Peashooter(6,  4);
+        // new Peashooter(6,  0);
+        // new Peashooter(6,  1);
+        // new Peashooter(6,  2);
+        // new Peashooter(6,  3);
+        // new Peashooter(6,  4);
 
         // new Peashooter(7,  0);
         // new Peashooter(7,  1);

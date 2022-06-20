@@ -108,5 +108,7 @@ export default class Bullet extends Plant {
     // }, Global.BULLET_REFRESH_TIME)
   }
 
-  
+  public getHurtValue(): number{
+    return this.hurtValue;
+  }
 }
