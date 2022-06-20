@@ -14,7 +14,7 @@ import UIObject from "../../lib/ui/UIObject";
 /**
  * 游戏界面
  */
-export default class GameInterface {
+export default class Panel {
     /**
      * 构造器
      */
@@ -25,9 +25,18 @@ export default class GameInterface {
         let scene: Scene =  new Scene();
         // 激活场景
         scene.activeScene();
-
-        // 添加素材
-        let bg: View = new View(require("@/assets/interface/background1.jpg"), 0, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
+        
+        // 填充资源
+        scene.addImgInfo(require("@/assets/interface/background1.jpg"));
+        scene.addImgInfo(require("@/assets/UI/Button.png"));
+        scene.addGifInfo(require("@/assets/plant/sunflower.gif"));
+        scene.addGifInfo(require("@/assets/bullet/PB001.gif"));
+        scene.addGifInfo(require("@/assets/plant/Peashooter.gif"));
+        // 加载资源
+        await scene.loadAssets();
+        
+        // 设置背景
+        let bg: View = new View(scene.getImgInfo(require("@/assets/interface/background1.jpg")), 0, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
         scene.addView(bg);
         new Sunflower(0,  0);
         new Sunflower(0,  1);
@@ -82,11 +91,11 @@ export default class GameInterface {
         // new Peashooter(5,  3);
         // new Peashooter(5,  4);
 
-        // new Peashooter(6,  0);
-        // new Peashooter(6,  1);
-        // new Peashooter(6,  2);
-        // new Peashooter(6,  3);
-        // new Peashooter(6,  4);
+        new Peashooter(6,  0);
+        new Peashooter(6,  1);
+        new Peashooter(6,  2);
+        new Peashooter(6,  3);
+        new Peashooter(6,  4);
 
         // new Peashooter(7,  0);
         // new Peashooter(7,  1);
@@ -106,7 +115,7 @@ export default class GameInterface {
         // new Wall(8,0);
 
 
-        // new UIObject(require("@/assets/UI/Button.png"), 0, 0, 50, 30);
+        new UIObject(require("@/assets/UI/Button.png"), 0, 0, 50, 30);
         // setTimeout(async ()=>{
         //     new Peashooter(3,  1)
         // }, 500)

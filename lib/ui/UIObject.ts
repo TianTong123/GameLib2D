@@ -35,9 +35,8 @@ export default class UIObject implements GameBase{
     this.width = width || 0;
     this.height = height || 0;
     this.zIndex = zIndex || 0;
-    this.view = new View(url, this.x, this.y, this.width, this.height);
+    this.view = new View(GAME.ACTIVE_SCENE.getImgInfo(url), this.x, this.y, this.width, this.height);
     this.view.setId(this.id);
-    this.view.loadImage(); // 这个返回的是promise, 如果有出现加载bug就用 await 接一下
     GAME.ACTIVE_SCENE.addUI(this);
   };
 

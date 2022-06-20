@@ -6,6 +6,8 @@ import GAME from "../game";
 import RigidBody from "../rigidBody/rigidBody";
 import UIObject from "../ui/UIObject";
 import Gif from "../gif/gif";
+import ImgInfo from "../view/imgInfo";
+import GitInfo from "../gif/gitInfo";
 /**
  * 场景类
  */
@@ -21,9 +23,9 @@ export default class Scene{
   // 刚体数组
   public RIGIDBODY_LIST: Array<RigidBody> = [];
   // 静态图片资源
-  private imgResources: HTMLImageElement[] = [];
+  private imgResources: ImgInfo[] = [];
   // gif资源
-  private gifResources: Gif[] = [];
+  private gifResources: GitInfo[] = [];
   // 音乐资源
   // .... 待扩展
   // 构造器
@@ -41,19 +43,16 @@ export default class Scene{
   }
 
   // 加载 scene 里面的资源
-  public loadAssets(): Promise<Result<string>>{ 
+  public async loadAssets(): Promise<Result<string>>{ 
     return new Promise(async (resolve, reject) => { 
-      // 加载静态资源
-      for(let i = 0, len = this.STATIC_LIST.length; i < len; i ++){
-        // 不做失败检验
-        await this.STATIC_LIST[i].loadImage();
+      let list: Promise<Result<string>>[] = [...this.imgResources.map(e => e.load()), ...this.gifResources.map(e => e.load())]
+      let i: number = 0;
+      for await ( let res of list ){ // 高级写法 res 是返回的结果
+        console.log("资源加载",res, ++i, " / ", list.length);
       }
-      // for(let i = 0, len = this.ANIMATION_LIST.length; i < len; i ++){
-      //   // 不做失败检验
-      //   await this.ANIMATION_LIST[i].load();     
-      // }
       resolve(new Result(1, "加载完成", "")); 
     }) 
+    
   } 
 
   // 添加游戏对象
@@ -107,8 +106,31 @@ export default class Scene{
     this.RIGIDBODY_LIST = this.RIGIDBODY_LIST.filter( e => e.id !== id );
   }
 
-  // 添加gif对象
-  public addGif(gif: Gif): void{
-    this.gifResources.push(gif);
+  // 添加 ImgInfo 对象
+  public addGifInfo(url: string): void{
+    let info: GitInfo = new GitInfo(url);
+    this.gifResources.push(info);
+  }
+
+  // 获取 gifInfo 对象
+  // 根据 url获取
+  public getGifInfo( url: string ): GitInfo{
+    // 为什么用index呢？ 因为用其他的可能会返回 undefined
+    let index: number = this.gifResources.findIndex(e => e.getUrl() == url);
+    return this.gifResources[index];
+  }
+
+  // 添加 ImgInfo 对象
+  public addImgInfo(url: string): void{
+    let info: ImgInfo = new ImgInfo(url);
+    this.imgResources.push(info);
+  }
+
+  // 获取 ImgInfo 对象
+  // 根据 url获取
+  public getImgInfo( url: string ): ImgInfo{
+    // 为什么用index呢？ 因为用其他的可能会返回 undefined
+    let index: number = this.imgResources.findIndex(e => e.getUrl() == url);
+    return this.imgResources[index];
   }
 }

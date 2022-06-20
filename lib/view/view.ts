@@ -1,13 +1,10 @@
 /**
  * 视图类
  */
-const { v4: uuidv4 } = require('uuid');
 import Result from "../model/result";
-import GAME from "../game";
+import ImgInfo from "./imgInfo";
 export default class View{
-  // 图片路径
-  private imgUrl: string = "";
-  // 图片对象
+  // 图片信息
   private img: HTMLImageElement;
   // 自己的id
   public id: string = "";
@@ -23,60 +20,34 @@ export default class View{
   /**
    * 构造器
    */
-  constructor(imgUrl: string, x?: number, y?: number, width?: number, height?: number){
-    this.imgUrl = imgUrl;
+  constructor(imgInfo: ImgInfo, x?: number, y?: number, width?: number, height?: number){
+    this.img = imgInfo.getImg();
     this.x = x || 0;
     this.y = y || 0;
     this.width = width || 0;
     this.height = height || 0;
-    this.img = new Image();
-    this.img.src = imgUrl;
   }
 
   /**
    * 设置信息
-   * @param imgUrl 图片路径, x：横坐标， y:纵坐标, widt:宽， height:高
+   * @param imgInfo 图片路径, x：横坐标， y:纵坐标, widt:宽， height:高
    */
-  // setInfo(imgUrl: string, x: number, y: number, width: number, height: number){
+  // setInfo(imgInfo: ImgInfo, x: number, y: number, width: number, height: number){
   //   this.id = uuidv4(); 
-  //   this.imgUrl = imgUrl;
+  //   this.imgInfo = imgInfo;
   //   this.x = x;
   //   this.y = y;
   //   this.width = width;
   //   this.height = height;
   // }
 
-  /**
-   * 加载图片
-   * @returns 返回一个 promise 带 Result 对象的结果。
-   */
-  public loadImage(): Promise<Result<String>>{
-    return new Promise((resolve, reject) => {
-      this.img.onload = () => { 
-        // GAME.ACTIVE_SCENE.addView(this);
-        resolve(new Result(1, "加载成功", "success"));          
-      };
-      this.img.onerror = (e) =>{
-        console.log(e);
-        reject(new Result(0, "加载失败", "error"));
-      }
-    })
-  }
 
   /**
-   * 获取图片路径
-   * @returns 返回图片路径
+   * 获取图片
+   * @returns 返回图片
    */
-  public getImg(): HTMLImageElement{
+   public getImg(): HTMLImageElement{
     return this.img;
-  }
-
-  /**
-   * 获取图片路径
-   * @returns 返回图片路径
-   */
-  public getImgUrl(): string{
-    return this.imgUrl;
   }
 
   /**

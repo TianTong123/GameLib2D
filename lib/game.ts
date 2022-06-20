@@ -28,8 +28,6 @@ export default class GAME {
   // 误差系数，小于这个就不处理了
   public static ERROR_COEFFICIENT = 0.03
 
- 
-
   // 初始化
   public static init(): void{
     this.RENDER = new Render(this.BASE_X_Offset, this.BASE_Y_Offset, this.VIEW_WIDTH, this.VIEW_HEIGHT);

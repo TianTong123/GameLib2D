@@ -43,7 +43,7 @@ export default class Gif {
           return
         }
         // if (!('response' in this)) {
-        //   this.response= new VBArray(this.responseText as any).toArray().map(String.fromCharCode as any).join('');
+        //   this.response= new VBArray(this.responseText as any).toArray().map(string.fromCharCode as any).join('');
         // }
         let data = this.response;
         if (data.toString().indexOf("ArrayBuffer") > 0) {
@@ -56,7 +56,6 @@ export default class Gif {
       };
 
       h.onerror = function (e) {
-        console.log("摆烂 error", e)
         reject("摆烂")
       };
 
@@ -81,7 +80,7 @@ export default class Gif {
   };
 
   private lzwDecode(minCodeSize: any, data: any) {
-    // TODO: Now that the GIF parser is a bit different, maybe this should get an array of bytes instead of a String?
+    // TODO: Now that the GIF parser is a bit different, maybe this should get an array of bytes instead of a string?
     let pos = 0; // Maybe this streaming thing should be merged with the Stream?
     function readCode(size: number) {
       let code = 0;

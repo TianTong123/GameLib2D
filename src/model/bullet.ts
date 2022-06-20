@@ -61,7 +61,7 @@ export default class Bullet extends Plant {
     this.createRigidBody(14, 14, 12, 0);
     // this.forceX = 1;
     // this.setGravity(true);
-    this.setHandlePhysics(true);
+    this.setHandlePhysics(false);
     this.setVX(this.speed);
   }
 
@@ -81,8 +81,12 @@ export default class Bullet extends Plant {
 
   // 碰撞
   collision( gameObject: GameObject ): void {
-    // console.log("欸嘿", gameObject); 
-    // this.destroy();
+    // console.log("欸嘿",  gameObject);
+    // 撞到植物不处理 
+    if( !(gameObject instanceof Plant) ){
+      this.destroy();
+    }
+    
   }
 
   /**

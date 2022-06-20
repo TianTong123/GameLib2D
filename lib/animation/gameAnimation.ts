@@ -2,6 +2,7 @@ import Gif from "../gif/gif";
 import GAME from "../game";
 import GameBase from "../interface/gameBase";
 import Result from "../model/result";
+import GitInfo from "../gif/gitInfo";
 /**
  * 动画类
  * 等待补充， 缓存同名文件的gif。下次用的时候直接调用这里，不再启用加载
@@ -14,8 +15,8 @@ export default class GameAnimation implements GameBase{
   public y: number;
   private width: number = 0;
   private height: number = 0;
-  // 路径
-  private url: string;
+  // GIF 对象
+  private gifInfo: GitInfo;
   // 每一帧的播放时间，即延时
   private delay: number = 0;
   // 动画帧列表
@@ -26,36 +27,23 @@ export default class GameAnimation implements GameBase{
   private length: number = 0;
   // 总时长
   private timeLength: number = 0;
-  private tempCanvas: HTMLCanvasElement | undefined;
+  private tempCanvas: HTMLCanvasElement;
   // 动画自己的当前播放时间
   private playTime: number = 0; // 当前动画播放时间.超过总时长就重置
   // 构造器
-  constructor(url: string, x?: number, y?: number, width?: number, height?: number) {
+  constructor(gifInfo: GitInfo, x?: number, y?: number, width?: number, height?: number) {
     this.x = x || 0;
     this.y = y || 0;
     this.width = width || 0;
     this.height = height || 0;
-    this.url = url;
-    // this.load();
+    this.gifInfo = gifInfo;
+    this.delay = gifInfo.getDelay();
+    this.frames = gifInfo.getFrames();
+    this.length = this.frames.length;
+    this.tempCanvas = gifInfo.getCanvas();
+    this.width = this.width || this.tempCanvas.width;
+    this.height = this.height || this.tempCanvas.height;
   }
-
-  // 加载方法
-  public load(): Promise<Result<String>>{
-    return new Promise((resolve, reject) => {
-      new Gif().load(this.url).then(res => {
-        this.delay = res.getDelay();
-        this.frames = res.getFrames();
-        this.length = this.frames.length;
-        this.tempCanvas = res.getTempCanvas();
-        this.width = this.width || this.tempCanvas.width;
-        this.height = this.height || this.tempCanvas.height;
-        // GAME.ACTIVE_SCENE.addAnimation(this);
-        resolve(new Result(1, "加载成功", "success"));
-      }).catch( err => {
-        reject(new Result(0, "加载失败", "error"));
-      });
-    })
-  };
 
   /**
    * 设置倍速
@@ -88,8 +76,8 @@ export default class GameAnimation implements GameBase{
       playIndex = 0;
     }
     
-    ((this.tempCanvas as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D).putImageData(this.frames[playIndex], 0, 0);
-    return this.tempCanvas as HTMLCanvasElement;
+    (this.tempCanvas.getContext("2d") as CanvasRenderingContext2D).putImageData(this.frames[playIndex], 0, 0);
+    return this.tempCanvas;
   }
 
   // getter && setter

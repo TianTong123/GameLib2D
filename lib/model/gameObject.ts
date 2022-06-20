@@ -7,6 +7,8 @@ import Scene from "../scene/scene";
 import Vector from "../util/vector";
 import Result from "./result";
 import { KEYCODE } from "../input/keyCode";
+import GitInfo from "../gif/gitInfo";
+import ImgInfo from "../view/imgInfo";
 const { v4: uuidv4 } = require('uuid');
 /**
  * 游戏对象抽象类
@@ -212,10 +214,10 @@ export default abstract class GameObject implements GameBase {
     }
 
     // 创建 view
-    public createView(imgUrl: string, x: number, y: number, width: number, height: number): void {
-        this.view = new View(imgUrl, x, y, width, height);
+    public createView(url: string, x: number, y: number, width: number, height: number): void {
+        let imgInfo: ImgInfo = GAME.ACTIVE_SCENE.getImgInfo(url); 
+        this.view = new View(imgInfo, x, y, width, height);
         this.view.setId(this.id);
-        this.view.loadImage(); // 这个返回的是promise, 如果有出现加载bug就用 await 接一下
         GAME.ACTIVE_SCENE.addView(this.view);
     }
 
@@ -227,12 +229,10 @@ export default abstract class GameObject implements GameBase {
 
     // 创建动画
     public createAnimation(url: string, x?: number, y?: number, width?: number, height?: number): void {
-        this.animation = new GameAnimation( url, x, y, width, height );
+        let gifInfo: GitInfo = GAME.ACTIVE_SCENE.getGifInfo(url); 
+        this.animation = new GameAnimation( gifInfo, x, y, width, height );
         this.animation.id = this.id; 
-        // 加载完成后放进animation
-        this.animation.load().then( (res: Result<String>) => {
-            GAME.ACTIVE_SCENE.addAnimation( this.animation as GameAnimation );
-        });
+        GAME.ACTIVE_SCENE.addAnimation( this.animation );
     }
 
     // 是否使用重力
