@@ -21,9 +21,11 @@ export default abstract class Zombie extends GameObject{
     if( gameObject instanceof Bullet ){
       this.HP -=  gameObject.getHurtValue();
     }
-    if( this.HP <= 0){
-      this.destroy();
-    }
+    // 没血就死亡
+    // if(this.HP <= 0){
+    //   this.switchAni(require("@/assets/zombie/ZombieDie.gif"));
+    //   this.setVX(0);
+    // }
   }
 
 
@@ -33,6 +35,14 @@ export default abstract class Zombie extends GameObject{
    */
   setAni( url: string ){
     this.createAnimation(url, this.x, this.y, this.width, this.height)
+  }
+
+  /**
+   * 切换动画
+   * @param url ： gif路径
+   */
+  switchAni( url: string ){
+    this.switchAnimation(url, this.x, this.y, this.width, this.height)
   }
 
   /**

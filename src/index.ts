@@ -5,7 +5,8 @@ import Panel from "./control/panel";
 import GAME from "../lib/game";
 
 GAME.init();
-GAME.start();
 
 let panel = new Panel();
-panel.start();
+panel.init();
+
+GAME.start();

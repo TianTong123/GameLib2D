@@ -234,6 +234,15 @@ export default abstract class GameObject implements GameBase {
         this.animation.id = this.id; 
         GAME.ACTIVE_SCENE.addAnimation( this.animation );
     }
+    // 创建动画
+    public switchAnimation(url: string, x?: number, y?: number, width?: number, height?: number): void {
+        let gifInfo: GitInfo = GAME.ACTIVE_SCENE.getGifInfo(url); 
+        this.animation = new GameAnimation( gifInfo, x, y, width, height );
+        this.animation.id = this.id; 
+        console.log(gifInfo);
+        
+        GAME.ACTIVE_SCENE.switchAnimation(this.id, this.animation )
+    }
 
     // 是否使用重力
     // isUse: true 使用
@@ -272,5 +281,12 @@ export default abstract class GameObject implements GameBase {
     }
     public getHandlePhysic(): boolean{
         return this.isHandlePhysics
+    }
+
+    /**
+     * 获取 animation
+     */
+    public getAniMation(): GameAnimation{
+        return this.animation as GameAnimation
     }
 }

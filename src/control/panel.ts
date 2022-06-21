@@ -21,7 +21,7 @@ export default class Panel {
      */
     constructor(){}
 
-    public async start(){
+    public async init(){
         // 创建一个场景
         let scene: Scene =  new Scene();
         // 激活场景
@@ -33,7 +33,11 @@ export default class Panel {
         scene.addGifInfo(require("@/assets/plant/sunflower.gif"));
         scene.addGifInfo(require("@/assets/bullet/PB001.gif"));
         scene.addGifInfo(require("@/assets/plant/Peashooter.gif"));
+        scene.addGifInfo(require("@/assets/zombie/Zombie.gif"));
+        scene.addGifInfo(require("@/assets/zombie/Zombie2.gif"));
         scene.addGifInfo(require("@/assets/zombie/Zombie3.gif"));
+        scene.addGifInfo(require("@/assets/zombie/ZombieDie.gif"));
+        scene.addGifInfo(require("@/assets/zombie/ZombieLostHead.gif"));
         // 加载资源
         await scene.loadAssets();
         
@@ -58,7 +62,7 @@ export default class Panel {
         setTimeout(async ()=>{
             new Sunflower(1,  4)
         }, 2000)
-        //new Bullet({ name: "PB00", isPierce: false, hurtValue: 50, speed: 10, isAll: true, range: -1, type: 0, column: 0, row: 0, offsetX: 40, offsetY: 5, width: 26,  height: 20})
+        // new Bullet({ name: "PB00", isPierce: false, hurtValue: 50, speed: 10, isAll: true, range: -1, type: 0, column: 0, row: 0, offsetX: 40, offsetY: 5, width: 26,  height: 20})
         // new Peashooter(0,  0);
         // new Bullet({
         //     name: "PB00",

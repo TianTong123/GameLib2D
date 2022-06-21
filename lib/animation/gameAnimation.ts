@@ -80,6 +80,14 @@ export default class GameAnimation implements GameBase{
     return this.tempCanvas;
   }
 
+  /**
+   * 设置播放速度
+   * @param percentage 大于0就行 来控制播放速度
+   */
+  public setPlaySpeed( percentage: number): void{
+    this.delay /= percentage;
+  }
+
   // getter && setter
   public setX(val: number):void{
     this.x = val;

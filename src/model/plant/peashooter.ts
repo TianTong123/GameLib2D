@@ -25,24 +25,6 @@ export default class Peashooter extends Plant {
     // this.setGravity(true);
   }
 
-  // /**
-  //  * 攻击方法
-  //  */
-  // attack(): void{
-
-
-  //    new Bullet({
-  //     name: "PB00", 
-  //     isPierce: false,
-  //     hurtValue: 50, 
-  //     speed: 10,
-  //     isAll: true,
-  //     range: -1,
-  //     type: 0,
-  //     column: this.column,
-  //     row: this.row})
-  // }
-
   /**
    * 攻击方法
    */
@@ -69,7 +51,7 @@ export default class Peashooter extends Plant {
       new Bullet({
         name: "PB00",
         isPierce: false,
-        hurtValue: 50,
+        hurtValue: 20,
         speed: 30,
         isAll: true,
         range: -1,

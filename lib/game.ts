@@ -38,7 +38,6 @@ export default class GAME {
     // 启动键盘事件
     Input.startLisEventListenerKeyboard();
     this.RENDER.startRender();
+    // this.ACTIVE_SCENE.start();
   }
-
-  
 }

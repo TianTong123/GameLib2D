@@ -165,7 +165,7 @@ export default class Gif {
         // Restore to previous
         // If we disposed every this.TEMP_CANVAS_CTX including first this.TEMP_CANVAS_CTX up to this point, then we have
         // no composited this.TEMP_CANVAS_CTX to restore to. In this case, restore to background instead.
-        if (this.CURRENT_FRAME_INDEX !== null) {
+        if (this.CURRENT_FRAME_INDEX !== null && this.CURRENT_FRAME_INDEX as number > -1) {
           this.TEMP_CANVAS_CTX.putImageData(this.FRAME_LIST[this.CURRENT_FRAME_INDEX as number], 0, 0);
         } else {
           this.TEMP_CANVAS_CTX.clearRect(0, 0, this.TEMP_CANVAS.width, this.TEMP_CANVAS.height);

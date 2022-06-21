@@ -75,6 +75,12 @@ export default class Scene{
     this.ANIMATION_LIST = this.ANIMATION_LIST.filter( e => e.id !== id );
   }
 
+   // 切换动画对象
+  public switchAnimation( id: string, ani: GameAnimation ): void{
+    let index: number = this.ANIMATION_LIST.findIndex( e => e.id === id );
+    this.ANIMATION_LIST[index] = ani;
+  }
+
   // 添加UI资源
   public addUI( ui: UIObject ): void{
     
