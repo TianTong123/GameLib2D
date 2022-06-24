@@ -20,19 +20,25 @@ export default class NormalZombie extends Zombie{
   }
   
   public update(deltaTime: number): void {
+    console.log(this.aniFlag);
+    
     // 半血二阶段
-    if(this.HP <= 100 && this.aniFlag == 0){
+    if(this.HP < 100 && this.aniFlag == 0){
       this.switchAni(require("@/assets/zombie/ZombieLostHead.gif"));
+      this.getAniMation().setLoop(true);
       this.aniFlag = 1;
     }
     // 没血就死亡
     if(this.HP <= 0 && this.aniFlag == 1){
       this.switchAni(require("@/assets/zombie/ZombieDie.gif"));
+      this.getAniMation().setLoop(false);
+      this.getAniMation().setSpeed(4);
       this.setVX(0);
       this.aniFlag = 2;
     }
-    if(this.aniFlag == 2){
-      
+    // 播放完死亡动画后就回收
+    if(this.aniFlag == 2 && this.getAniMation().isOver()){
+      this.destroy();
     }
   }
 

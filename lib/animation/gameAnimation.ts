@@ -25,8 +25,10 @@ export default class GameAnimation implements GameBase{
   private speed: number = 1;
   // 总长度
   private length: number = 0;
-  // 总时长
-  private timeLength: number = 0;
+  // 是否结束
+  private over: boolean = false;
+  //是否循环
+  private isLoop: boolean = false;
   private tempCanvas: HTMLCanvasElement;
   // 动画自己的当前播放时间
   private playTime: number = 0; // 当前动画播放时间.超过总时长就重置
@@ -71,9 +73,13 @@ export default class GameAnimation implements GameBase{
     // 做两次就是正数
     let playIndex: number = ~~(this.playTime / this.delay * this.speed);
     // 超过就重置
-    if (playIndex >= this.length) {
+    this.over = playIndex >= this.length;
+    if (this.over && this.isLoop) {
       this.playTime = 0;
       playIndex = 0;
+    }
+    if(this.over && !this.isLoop){
+      playIndex = this.frames.length - 1;
     }
     
     (this.tempCanvas.getContext("2d") as CanvasRenderingContext2D).putImageData(this.frames[playIndex], 0, 0);
@@ -112,5 +118,11 @@ export default class GameAnimation implements GameBase{
   }
   public getHeight(): number{
     return this.height;
+  }
+  public setLoop( val: boolean ): void{
+    this.isLoop = val;
+  }
+  public isOver(): boolean{
+    return this.over;
   }
 }

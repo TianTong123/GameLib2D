@@ -33,15 +33,16 @@ export default abstract class Zombie extends GameObject{
    * 设置动画
    * @param url ： gif路径
    */
-  setAni( url: string ){
-    this.createAnimation(url, this.x, this.y, this.width, this.height)
+  setAni( url: string ): void{
+    this.createAnimation(url, this.x, this.y, this.width, this.height);
+    this.getAniMation().setLoop(true);
   }
 
   /**
    * 切换动画
    * @param url ： gif路径
    */
-  switchAni( url: string ){
+  switchAni( url: string ): void{
     this.switchAnimation(url, this.x, this.y, this.width, this.height)
   }
 

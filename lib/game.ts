@@ -21,6 +21,8 @@ export default class GAME {
   public static REFRESH_FRAME: number = 60;
   // 固定刷新时间
   public static REFRESH_FRAME_TIME: number = 1000/60;
+  // 计算频率
+  public static COMPUTE_TIME: number = 10; // 以后扩展就是按这个时间来算。计算按这个，渲染按上面
   // 当前活动的场景
   public static ACTIVE_SCENE: Scene;
   // 能量衰减百分比。即碰撞后所损失的能量。1则为弹性碰撞。能量不损失。一直动， 最小值为0

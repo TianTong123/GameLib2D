@@ -30,8 +30,11 @@ export default class Panel {
         // 填充资源
         scene.addImgInfo(require("@/assets/interface/background1.jpg"));
         scene.addImgInfo(require("@/assets/UI/Button.png"));
+        scene.addImgInfo(require("@/assets/LogoLine.png"));
+        scene.addImgInfo(require("@/assets/SodRoll.png"));
         scene.addGifInfo(require("@/assets/plant/sunflower.gif"));
         scene.addGifInfo(require("@/assets/bullet/PB001.gif"));
+        scene.addGifInfo(require("@/assets/bullet/pb.gif"));
         scene.addGifInfo(require("@/assets/plant/Peashooter.gif"));
         scene.addGifInfo(require("@/assets/zombie/Zombie.gif"));
         scene.addGifInfo(require("@/assets/zombie/Zombie2.gif"));
@@ -49,19 +52,19 @@ export default class Panel {
         new Sunflower(0,  2);
         new Sunflower(0,  3);
         new Sunflower(0,  4);
-        new Sunflower(1,  0);
-        setTimeout(async ()=>{
-            new Sunflower(1,  1)
-        }, 500)
-        setTimeout(async ()=>{
-            new Sunflower(1,  2)
-        }, 1000)
-        setTimeout(async ()=>{
-            new Sunflower(1,  3)
-        }, 1500)
-        setTimeout(async ()=>{
-            new Sunflower(1,  4)
-        }, 2000)
+        // new Sunflower(1,  0);
+        // setTimeout(async ()=>{
+        //     new Sunflower(1,  1)
+        // }, 500)
+        // setTimeout(async ()=>{
+        //     new Sunflower(1,  2)
+        // }, 1000)
+        // setTimeout(async ()=>{
+        //     new Sunflower(1,  3)
+        // }, 1500)
+        // setTimeout(async ()=>{
+        //     new Sunflower(1,  4)
+        // }, 2000)
         // new Bullet({ name: "PB00", isPierce: false, hurtValue: 50, speed: 10, isAll: true, range: -1, type: 0, column: 0, row: 0, offsetX: 40, offsetY: 5, width: 26,  height: 20})
         // new Peashooter(0,  0);
         // new Bullet({
@@ -79,11 +82,11 @@ export default class Panel {
         //     width: 26,
         //     height: 20
         //   })
-        new Peashooter(2,  0);
-        new Peashooter(2,  1);
-        new Peashooter(2,  2);
-        new Peashooter(2,  3);
-        new Peashooter(2,  4);
+        new Peashooter(1,  0);
+        new Peashooter(1,  1);
+        new Peashooter(1,  2);
+        new Peashooter(1,  3);
+        new Peashooter(1,  4);
 
         new NormalZombie(8,  2);
 
@@ -121,8 +124,6 @@ export default class Panel {
 
         // new Plane(0, 4);
         // new Wall(8,0);
-
-
         new UIObject(require("@/assets/UI/Button.png"), 0, 0, 50, 30);
         // setTimeout(async ()=>{
         //     new Peashooter(3,  1)

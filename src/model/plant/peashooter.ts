@@ -51,7 +51,7 @@ export default class Peashooter extends Plant {
       new Bullet({
         name: "PB00",
         isPierce: false,
-        hurtValue: 20,
+        hurtValue: 50,
         speed: 30,
         isAll: true,
         range: -1,
@@ -60,8 +60,8 @@ export default class Peashooter extends Plant {
         row: this.row,
         offsetX: 40,
         offsetY: 5,
-        width: 26,
-        height: 20
+        width: 15,
+        height: 15
       })
       this.time = 0;
     }

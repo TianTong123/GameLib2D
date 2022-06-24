@@ -57,8 +57,8 @@ export default class Bullet extends Plant {
     this.y = this.getOffsetY(args.offsetY);
     this.width = args.width || 60;
     this.height = args.height || 69;
-    this.createAnimation(require("@/assets/bullet/PB001.gif"), this.x, this.y, this.width, this.height);
-    this.createRigidBody(14, 14, 12, 0);
+    this.createAnimation(require("@/assets/bullet/pb.gif"), this.x, this.y, this.width, this.height);
+    this.createRigidBody(15, 15, 0, 0);
     // this.forceX = 1;
     // this.setGravity(true);
     this.setHandlePhysics(false);

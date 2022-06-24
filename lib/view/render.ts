@@ -178,8 +178,7 @@ export default class Render{
     })
   }
 
-
-
+  
   /**
    * 清空画布方法
    */
