@@ -1,6 +1,7 @@
 import Scene from "./scene/scene";
 import Render from "./view/render";
 import Input from "./input/input";
+import Panel from "./scene/panel";
 /**
  * 游戏类，设置属性
  */
@@ -30,16 +31,35 @@ export default class GAME {
   // 误差系数，小于这个就不处理了
   public static ERROR_COEFFICIENT = 0.03
 
-  // 初始化
-  public static init(): void{
-    this.RENDER = new Render(this.BASE_X_Offset, this.BASE_Y_Offset, this.VIEW_WIDTH, this.VIEW_HEIGHT);
-  }
-
   // 游戏启动
-  public static start(): void{
-    // 启动键盘事件
-    Input.startLisEventListenerKeyboard();
-    this.RENDER.startRender();
-    // this.ACTIVE_SCENE.start();
+  public static async start(panel: Panel ): Promise<string>{
+    try{
+      this.RENDER = new Render(this.BASE_X_Offset, this.BASE_Y_Offset, this.VIEW_WIDTH, this.VIEW_HEIGHT);
+      // 启动键盘事件
+      Input.startLisEventListenerKeyboard();
+      
+      // 激活scence
+      this.ACTIVE_SCENE = panel.getScence();
+
+      // 处理panel
+      panel.assets();
+
+      // 加载资源
+      await this.ACTIVE_SCENE.loadAssets()
+
+      // 载入渲染资源
+      this.ACTIVE_SCENE.refreshComponent();
+      
+      // 启动panel
+      panel.run();
+
+      // 开始渲染
+      this.RENDER.startRender();
+
+      return "游戏启动完毕，起飞！"
+    }catch(err){
+      console.log(err);
+      return "游戏启动失败，坠机！"
+    }
   }
 }

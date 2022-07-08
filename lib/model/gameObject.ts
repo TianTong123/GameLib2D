@@ -257,7 +257,7 @@ export default abstract class GameObject implements GameBase {
         GAME.ACTIVE_SCENE.deleteGameObject(this.id);
         GAME.ACTIVE_SCENE.deleteView(this.id);
         GAME.ACTIVE_SCENE.deleteRigidbody(this.id);
-        GAME.ACTIVE_SCENE.start();
+        GAME.ACTIVE_SCENE.refreshComponent();
     }
 
     // 设置v

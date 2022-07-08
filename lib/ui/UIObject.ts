@@ -69,6 +69,6 @@ export default class UIObject implements GameBase{
   public destroy(): void{
     // 后续更正为只保留gameObjectList, 其他数组就用map来取
     GAME.ACTIVE_SCENE.deleteUI(this.id);
-    GAME.ACTIVE_SCENE.start();
+    GAME.ACTIVE_SCENE.refreshComponent();
   } 
 }

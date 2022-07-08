@@ -1,12 +1,7 @@
-import "../css/index.css";
-import "../css/plant.css";
-import "../css/interface.css";
-import Panel from "./control/panel";
+// import "../css/index.css";
+// import "../css/plant.css";
+// import "../css/interface.css";
 import GAME from "../lib/game";
-
-GAME.init();
-
-let panel = new Panel();
-panel.init();
-
-GAME.start();
+import MianPanel from "./mainPanel";
+// 游戏启动
+GAME.start(new MianPanel());

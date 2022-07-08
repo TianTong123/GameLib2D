@@ -1,52 +1,49 @@
 // import Bullet from "../model/bullet";
 // import Peashooter from "../model/plant/peashooter";
 // import Sunflower from "../model/plant/sunflower";
-import Global from "../public/Global";
-import Scene from "../../lib/scene/scene";
-import Sunflower from "../model/plant/sunflower";
-import View from "../../lib/view/view";
-import Peashooter from "../model/plant/peashooter";
-import Bullet from "../model/bullet";
-import GameObject from "../../lib/model/gameObject";
-import Plane from "../model/plant/plane";
-import Wall from "../model/plant/wall";
-import UIObject from "../../lib/ui/UIObject";
-import NormalZombie from "../model/zombie/normalZombie";
+import Global from "./public/Global";
+import Scene from "../lib/scene/scene";
+import Sunflower from "./model/plant/sunflower";
+import View from "../lib/view/view";
+import Peashooter from "./model/plant/peashooter";
+import Bullet from "./model/bullet";
+import GameObject from "../lib/model/gameObject";
+import Plane from "./model/plant/plane";
+import Wall from "./model/plant/wall";
+import UIObject from "../lib/ui/UIObject";
+import NormalZombie from "./model/zombie/normalZombie";
+import Panel from "../lib/scene/panel";
 /**
  * 游戏界面
  */
-export default class Panel {
-    /**
-     * 构造器
-     */
-    constructor(){}
+export default class MianPanel extends Panel {
 
-    public async init(){
-        // 创建一个场景
-        let scene: Scene =  new Scene();
-        // 激活场景
-        scene.activeScene();
+    public assets(): void {
+         // 填充资源
+        this.scene.addImgInfo(require("@/assets/interface/background1.jpg"));
+        this.scene.addImgInfo(require("@/assets/UI/Button.png"));
+        this.scene.addImgInfo(require("@/assets/LogoLine.png"));
+        this.scene.addImgInfo(require("@/assets/SodRoll.png"));
+        this.scene.addGifInfo(require("@/assets/plant/sunflower.gif"));
+        this.scene.addGifInfo(require("@/assets/bullet/PB001.gif"));
+        this.scene.addGifInfo(require("@/assets/bullet/pb.gif"));
+        this.scene.addGifInfo(require("@/assets/plant/Peashooter.gif"));
+        this.scene.addGifInfo(require("@/assets/zombie/Zombie.gif"));
+        this.scene.addGifInfo(require("@/assets/zombie/Zombie2.gif"));
+        this.scene.addGifInfo(require("@/assets/zombie/Zombie3.gif"));
+        this.scene.addGifInfo(require("@/assets/zombie/ZombieDie.gif"));
+        this.scene.addGifInfo(require("@/assets/zombie/ZombieLostHead.gif"));
+    }
+
+    public run(): void{
         
-        // 填充资源
-        scene.addImgInfo(require("@/assets/interface/background1.jpg"));
-        scene.addImgInfo(require("@/assets/UI/Button.png"));
-        scene.addImgInfo(require("@/assets/LogoLine.png"));
-        scene.addImgInfo(require("@/assets/SodRoll.png"));
-        scene.addGifInfo(require("@/assets/plant/sunflower.gif"));
-        scene.addGifInfo(require("@/assets/bullet/PB001.gif"));
-        scene.addGifInfo(require("@/assets/bullet/pb.gif"));
-        scene.addGifInfo(require("@/assets/plant/Peashooter.gif"));
-        scene.addGifInfo(require("@/assets/zombie/Zombie.gif"));
-        scene.addGifInfo(require("@/assets/zombie/Zombie2.gif"));
-        scene.addGifInfo(require("@/assets/zombie/Zombie3.gif"));
-        scene.addGifInfo(require("@/assets/zombie/ZombieDie.gif"));
-        scene.addGifInfo(require("@/assets/zombie/ZombieLostHead.gif"));
+       
         // 加载资源
-        await scene.loadAssets();
+        // await this.scene.loadAssets();
         
         // 设置背景
-        let bg: View = new View(scene.getImgInfo(require("@/assets/interface/background1.jpg")), 0, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
-        scene.addView(bg);
+        let bg: View = new View(this.scene.getImgInfo(require("@/assets/interface/background1.jpg")), 0, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
+        this.scene.addView(bg);
         new Sunflower(0,  0);
         new Sunflower(0,  1);
         new Sunflower(0,  2);
@@ -144,6 +141,11 @@ export default class Panel {
         // await scene.loadAssets();
 
         // 启动
-        scene.start();
+        // scene.start();
     }
+
+    public getScence(): Scene{
+        return this.scene;
+    }
+
 }

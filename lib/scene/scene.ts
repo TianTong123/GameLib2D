@@ -36,8 +36,8 @@ export default class Scene{
     GAME.ACTIVE_SCENE = this;
   }
 
-  // 正式启动scene，放到 render 进行渲染
-  public start(): void {
+  // 加载组件数组，放到 render 进行渲染
+  public refreshComponent(): void {
     // 放进渲染数组
     GAME.RENDER.setList(this.STATIC_LIST, this.ANIMATION_LIST, this.UI_LIST, this.GAME_OBJECT_LIST, this.RIGIDBODY_LIST);
   }
@@ -50,9 +50,9 @@ export default class Scene{
       for await ( let res of list ){ // 高级写法 res 是返回的结果
         console.log("资源加载",res, ++i, " / ", list.length);
       }
-      resolve(new Result(1, "加载完成", "")); 
+
+      resolve(new Result(1, "加载完成", ""));
     }) 
-    
   } 
 
   // 添加游戏对象
