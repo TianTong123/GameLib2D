@@ -16,22 +16,30 @@ export default abstract class Panel {
    */
   public abstract run(): void;
 
-  // /**
-  //  * 处理方法
-  //  */
-  public async handle(): Promise<string>{
-    try{
-      this.assets();
-      await this.scene.loadAssets();
-      this.run();
-      return "成功"
-    } catch( err ){
-      return "失败"
-    }
+  // getter
+  public getScene(): Scene {
+    return this.scene;
   }
 
-  // getter
-  public getScence(): Scene{
-    return this.scene;
+  public async switchPanel(panel: Panel): Promise<string> {
+    try {
+      // 激活
+      panel.getScene().activeScene();
+
+      // 处理panel
+      panel.assets();
+
+      // 加载资源
+      await panel.getScene().loadAssets()
+
+      // 载入渲染资源
+      panel.getScene().refreshComponent();
+      
+      // 运行
+      panel.run();
+      return "成功"
+    } catch (err) {
+      return "成功"
+    }
   }
 }

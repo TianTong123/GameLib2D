@@ -13,6 +13,8 @@ import Wall from "./model/plant/wall";
 import UIObject from "../lib/ui/UIObject";
 import NormalZombie from "./model/zombie/normalZombie";
 import Panel from "../lib/scene/panel";
+import TestPanel from "./scene/testPanel";
+import GAME from "../lib/game";
 /**
  * 游戏界面
  */
@@ -40,7 +42,12 @@ export default class MianPanel extends Panel {
        
         // 加载资源
         // await this.scene.loadAssets();
-        
+        // 切换 panel
+        // setTimeout(async ()=>{
+        //     let test: TestPanel = new TestPanel();
+        //     this.switchPanel(test);
+        // }, 5000)
+
         // 设置背景
         let bg: View = new View(this.scene.getImgInfo(require("@/assets/interface/background1.jpg")), 0, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
         this.scene.addView(bg);
@@ -144,7 +151,7 @@ export default class MianPanel extends Panel {
         // scene.start();
     }
 
-    public getScence(): Scene{
+    public getScene(): Scene{
         return this.scene;
     }
 

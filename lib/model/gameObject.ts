@@ -16,7 +16,7 @@ const { v4: uuidv4 } = require('uuid');
 export default abstract class GameObject implements GameBase {
     // id
     public id: string = "";
-
+    
     // 坐标
     public x: number = 0;
     public y: number = 0;

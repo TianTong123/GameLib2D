@@ -20,7 +20,7 @@ export default class NormalZombie extends Zombie{
   }
   
   public update(deltaTime: number): void {
-    console.log(this.aniFlag);
+    // console.log(this.aniFlag);
     
     // 半血二阶段
     if(this.HP < 100 && this.aniFlag == 0){

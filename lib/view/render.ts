@@ -42,6 +42,9 @@ export default class Render{
   private width: number;
   private height: number;
 
+  private logo: HTMLImageElement = new Image();
+  private logoWidth: number = 0;
+  private logoHeight: number = 0;
   /**
    * 构造器
    */
@@ -70,8 +73,15 @@ export default class Render{
     let canvas = document.createElement("canvas"); 
     canvas.width = width;
     canvas.height = height;
-    canvas.setAttribute("style", `left: ${x}px; top: ${y}px; position: absolute;`);
+    canvas.setAttribute("style", `left: ${x}px; top: ${y}px; position: absolute; background-color: #212c35`);
     this.CTX = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+    this.logoHeight = this.height*0.5;
+    this.logoWidth = this.logoHeight*1.29;
+    this.logo.src = require("../assets/logo.png");
+    this.logo.onload = () => { 
+      this.startAnimation();    
+    };
     // 点击事件
     canvas.addEventListener("click", (e: MouseEvent) => {
       // console.log("点击事件");
@@ -220,7 +230,7 @@ export default class Render{
   }
 
   /**
-   * canvas 的事件处理
+   * canvas 的鼠标事件处理
    * @param e: MouseEvent
    * @param type : 区别是那些事件
    */
@@ -232,5 +242,21 @@ export default class Render{
     for(let i = 0, len = this.UIList.length; i < len; i ++){
       this.UIList[i].checkPosInRotationRect(new Vector(x, y));
     }
+  }
+
+  /**
+   * 游戏启动动画
+   */
+  private num: number = 0;
+  private startAnimation():void{
+    this.CTX.drawImage(this.logo, this.width/2 - this.logoWidth*0.5 , this.height/2 - this.logoHeight*0.5, this.logoWidth, this.logoHeight);
+    this.logoHeight += 0.1;
+    this.logoWidth = this.logoHeight*1.29;
+    setTimeout(()=>{
+      this.num++;
+      if( this.num  < 180 ){
+        this.startAnimation();
+      }
+    }, GAME.REFRESH_FRAME_TIME)
   }
 }
