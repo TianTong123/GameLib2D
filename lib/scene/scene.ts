@@ -5,7 +5,6 @@ import Result from "../model/result";
 import GAME from "../game";
 import RigidBody from "../rigidBody/rigidBody";
 import UIObject from "../ui/UIObject";
-import Gif from "../gif/gif";
 import ImgInfo from "../view/imgInfo";
 import GitInfo from "../gif/gitInfo";
 /**

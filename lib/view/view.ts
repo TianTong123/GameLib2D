@@ -1,7 +1,6 @@
 /**
  * 视图类
  */
-import Result from "../model/result";
 import ImgInfo from "./imgInfo";
 export default class View{
   // 图片信息

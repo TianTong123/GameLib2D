@@ -134,8 +134,6 @@ export default class Render{
   public renderAnimation(): void{
     for(let i = 0, len = this.animationList.length; i < len; i ++){
       let ani = this.animationList[i];   
-    
-        
       this.CTX_ANIMATION.drawImage(ani.getCurrentFrame(), ani.getX(), ani.getY(), ani.getWidth(), ani.getHeight());
     }
     this.CTX.drawImage(this.CANVAS_ANIMATION, 0, 0);

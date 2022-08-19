@@ -3,10 +3,7 @@ import GameBase from "../interface/gameBase";
 import View from "../view/view";
 import RigidBody from "../rigidBody/rigidBody";
 import GameAnimation from "../animation/gameAnimation";
-import Scene from "../scene/scene";
 import Vector from "../util/vector";
-import Result from "./result";
-import { KEYCODE } from "../input/keyCode";
 import GitInfo from "../gif/gitInfo";
 import ImgInfo from "../view/imgInfo";
 const { v4: uuidv4 } = require('uuid');
@@ -24,6 +21,9 @@ export default abstract class GameObject implements GameBase {
     // 大小
     public width: number = 0;
     public height: number = 0;
+
+    // 是否显示
+    public show: Boolean = true;
 
     // 视图
     private view?: View;

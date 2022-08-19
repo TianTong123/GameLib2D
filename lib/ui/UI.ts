@@ -1,9 +1,9 @@
-import Scene from "./scene";
+import Scene from "../scene/scene";
 
 /**
- * 画板类
+ * ui类 放ui用的（其实就panel类）
  */
-export default abstract class Panel {
+export default abstract class UI{
   public scene: Scene = new Scene();
 
   /**
@@ -21,23 +21,23 @@ export default abstract class Panel {
     return this.scene;
   }
 
-  //切换panel
-  public async switchPanel(panel: Panel): Promise<string> {
+  //切换UI
+  public async switchUI(ui: UI): Promise<string> {
     try {
       // 激活
-      panel.getScene().activeScene();
+      ui.getScene().activeScene();
 
-      // 处理panel
-      panel.assets();
+      // 处理ui
+      ui.assets();
 
       // 加载资源
-      await panel.getScene().loadAssets()
+      await ui.getScene().loadAssets()
 
       // 载入渲染资源
-      panel.getScene().refreshComponent();
+      ui.getScene().refreshComponent();
       
       // 运行
-      panel.run();
+      ui.run();
       return "成功"
     } catch (err) {
       return "翻车"

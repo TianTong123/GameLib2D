@@ -14,8 +14,12 @@ export default class UIObject implements GameBase{
   private width: number = 0;
   private height: number = 0;
 
+  // 是否显示
+  public show: Boolean = true;
+
   // 旋转角度（可以考虑的扩展）
   private rotation: number = 0
+  
 
   // id
   public id: string = "";
