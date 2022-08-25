@@ -21,7 +21,7 @@ import GAME from "../lib/game";
 export default class MianPanel extends Panel {
 
     public assets(): void {
-         // 填充资源
+        // 填充资源
         this.scene.addImgInfo(require("@/assets/interface/background1.jpg"));
         this.scene.addImgInfo(require("@/assets/UI/Button.png"));
         this.scene.addImgInfo(require("@/assets/LogoLine.png"));
@@ -49,7 +49,7 @@ export default class MianPanel extends Panel {
         // }, 5000)
 
         // 设置背景
-        let bg: View = new View(this.scene.getImgInfo(require("@/assets/interface/background1.jpg")), 0, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
+        let bg: View = new View(this.scene.getImgInfo(require("@/assets/interface/background1.jpg")), -100, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
         this.scene.addView(bg);
         new Sunflower(0,  0);
         new Sunflower(0,  1);

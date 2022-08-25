@@ -10,7 +10,7 @@ export default class Global {
     // 块的大小
     public static BLOCK_SIZE: number = 70;
     // 基础 植物X 偏移 (因为地图有屋子，栅栏这些，所以有植物 X Y 的偏移值)
-    public static BASE_PLANT_X_Offset: number = 220;
+    public static BASE_PLANT_X_Offset: number = 120;
     // 基础 植物Y 偏移
     public static BASE_PLANT_Y_Offset: number = 65;
     // 子弹刷新时间

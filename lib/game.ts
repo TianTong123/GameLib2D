@@ -1,3 +1,4 @@
+import "../css/index.css";
 import Scene from "./scene/scene";
 import Render from "./view/render";
 import Input from "./input/input";
@@ -33,8 +34,18 @@ export default class GAME {
   // public static LOADINGLIST: number[] = []
 
   // 游戏启动
-  public static async start(panel: Panel): Promise<string> {
+  public static async start(panel: Panel, width?: number, height?: number, x?: number, y?: number,): Promise<string> {
     try {
+      // 屏幕宽高
+      const screenWidth:number = document.body.clientWidth;
+      const screenHeight:number = document.body.clientHeight;
+
+      // 给基础参数赋值
+      this.VIEW_WIDTH = width || screenWidth/2;
+      this.VIEW_HEIGHT = height || screenHeight/2;
+      this.BASE_X_Offset = x || screenWidth/2 - this.VIEW_WIDTH/2;
+      this.BASE_Y_Offset = y || screenHeight/2 - this.VIEW_HEIGHT/2;
+
       // 3 秒后渲染第一个panel
       setTimeout(async () => {
         // 激活scene
@@ -45,6 +56,7 @@ export default class GAME {
 
         // 加载资源
         await this.ACTIVE_SCENE.loadAssets();
+        
         // 载入渲染资源
         this.ACTIVE_SCENE.refreshComponent();
 

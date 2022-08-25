@@ -57,7 +57,8 @@ export default class RigidBody {
 
   /** 
    * 碰撞检测
-   * 两个矩形的投影半径相加小于矩形中心点向量的投影的长度的话。说明这两个矩形在这轴并没有相交。
+   * 当所有的轴都满足两个矩形的投影半径相加大于矩形中心点向量的投影的长度的话。说明这两个矩形在这轴并没有相交。
+   * 所以只要有一个不相交，就说明没有相交
    */
   public checkCollision(rigidBody: RigidBody) {
     if(!rigidBody){
@@ -67,7 +68,7 @@ export default class RigidBody {
     // 向量相减
     let centerDistanceVertor:Vector = this.centerPoint.substract(rigidBody.centerPoint);
 
-    // 四个单位向量 两个就够，有遇到碰撞bug再放开
+    // 四个单位向量，即4个轴，因为是矩形，所以是4个轴
     let axes: Vector[] = [
       this.axisX,
       this.axisY,

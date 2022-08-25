@@ -256,5 +256,17 @@ export default class Render{
         this.startAnimation();
       }
     }, GAME.REFRESH_FRAME_TIME)
+  } 
+
+  /**
+   * 进度条处理
+   * @param progress 当前进度
+   * @param length 总长度
+   */
+  public loadProgress( progress: number, length: number): void{
+    this.CTX.clearRect(0, 0, this.width, this.height);
+    this.CTX.font = "900 23px Arial";
+    this.CTX.fillStyle = "#fff";
+    this.CTX.fillText(`加载中 ${(progress/length*100).toFixed(0)}%`, this.width-150,this.height - 30);
   }
 }

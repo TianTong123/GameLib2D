@@ -4,13 +4,19 @@ import Result from "../model/result";
  * 图片资源信息对象
  */
  export default class ImgInfo {
-  private url: string; // gif 文件路径（作为唯一值用）
-  private img: HTMLImageElement;// 图片对象
-
+  // gif 文件路径（作为唯一值用）
+  private url: string;
+  // 图片对象
+  private img: HTMLImageElement;
+  // 图片名字， 暂时弃用
+  // private name: string;
+  
   constructor( url: string ){
     this.url = url;
     this.img = new Image();
     this.img.src = url;
+    // this.name = name|| ""
+    
   }
 
   /**
