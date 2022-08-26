@@ -29,19 +29,19 @@ export default class Peashooter extends Plant {
    * 攻击方法
    */
   update(deltaTime: number): void {
-    if(Input.getKeyDown(KEYCODE.Control_L)){
-      console.log("我按ctrl了");
+    // if(Input.getKeyDown(KEYCODE.Control_L)){
+    //   console.log("我按ctrl了");
       
-    }
-    if(Input.getKeyDown(KEYCODE.A)){
-      console.log("我按 a了");
-    }
-    if(Input.getHorizontalAxis()){
-      console.log("我按 横轴");
-    }
-    if(Input.getVerticallAxis()){
-      console.log("我按 纵轴");
-    }
+    // }
+    // if(Input.getKeyDown(KEYCODE.A)){
+    //   console.log("我按 a了");
+    // }
+    // if(Input.getHorizontalAxis()){
+    //   console.log("我按 横轴");
+    // }
+    // if(Input.getVerticallAxis()){
+    //   console.log("我按 纵轴");
+    // }
     // Input.getHorizontalAxis(); Input.getVerticallAxis()
     // console.log(Input.getHorizontalAxis(), Input.getVerticallAxis());
     // console.log(deltaTime, GAME.REFRESH_FRAME_TIME);

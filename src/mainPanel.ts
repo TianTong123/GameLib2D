@@ -52,10 +52,10 @@ export default class MianPanel extends Panel {
         let bg: View = new View(this.scene.getImgInfo(require("@/assets/interface/background1.jpg")), -100, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
         this.scene.addView(bg);
         new Sunflower(0,  0);
-        new Sunflower(0,  1);
-        new Sunflower(0,  2);
-        new Sunflower(0,  3);
-        new Sunflower(0,  4);
+        // new Sunflower(0,  1);
+        // new Sunflower(0,  2);
+        // new Sunflower(0,  3);
+        // new Sunflower(0,  4);
         // new Sunflower(1,  0);
         // setTimeout(async ()=>{
         //     new Sunflower(1,  1)

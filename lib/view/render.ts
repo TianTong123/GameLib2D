@@ -23,6 +23,7 @@ export default class Render{
   private CANVAS_UI: HTMLCanvasElement;
 
   // 最终版
+  private CTX_CANVAS: HTMLCanvasElement;
   public CTX: CanvasRenderingContext2D;
 
   // 静态资源
@@ -38,70 +39,62 @@ export default class Render{
   // 渲染一帧完成时的时间戳
   private timeStamp: number = 0;
 
-  // 宽高
-  private width: number;
-  private height: number;
-
   private logo: HTMLImageElement = new Image();
   private logoWidth: number = 0;
   private logoHeight: number = 0;
   /**
    * 构造器
    */
-  constructor(x: number, y: number, width: number, height: number){
-    this.width = width;
-    this.height = height;
+  constructor(){
     // 静态资源层
     this.CANVAS_STATIC = document.createElement("canvas"); 
-    this.CANVAS_STATIC.width = width;
-    this.CANVAS_STATIC.height = height;
+    this.CANVAS_STATIC.width = GAME.RENDERER_WIDTH;
+    this.CANVAS_STATIC.height = GAME.RENDERER_HEIGHT;
     this.CTX_STATIC = this.CANVAS_STATIC.getContext('2d') as CanvasRenderingContext2D;
 
     // 动画层
     this.CANVAS_ANIMATION = document.createElement("canvas"); 
-    this.CANVAS_ANIMATION.width = width;
-    this.CANVAS_ANIMATION.height = height;
+    this.CANVAS_ANIMATION.width = GAME.RENDERER_WIDTH;
+    this.CANVAS_ANIMATION.height = GAME.RENDERER_HEIGHT;
     this.CTX_ANIMATION = this.CANVAS_ANIMATION.getContext('2d') as CanvasRenderingContext2D;
 
-    // UI层
+    // UI层(现在更名为游戏交互层)
     this.CANVAS_UI = document.createElement("canvas"); 
-    this.CANVAS_UI.width = width;
-    this.CANVAS_UI.height = height;
+    this.CANVAS_UI.width = GAME.RENDERER_WIDTH;;
+    this.CANVAS_UI.height = GAME.RENDERER_HEIGHT;
     this.CTX_UI = this.CANVAS_UI.getContext('2d') as CanvasRenderingContext2D;
 
     // 最终版
-    let canvas = document.createElement("canvas"); 
-    canvas.width = width;
-    canvas.height = height;
-    canvas.setAttribute("style", `left: ${x}px; top: ${y}px; position: absolute; background-color: #212c35`);
-    this.CTX = canvas.getContext('2d') as CanvasRenderingContext2D;
+    this.CTX_CANVAS = document.createElement("canvas"); 
+    this.CTX_CANVAS.width = GAME.RENDERER_WIDTH;
+    this.CTX_CANVAS.height = GAME.RENDERER_HEIGHT;
+    this.CTX = this.CTX_CANVAS.getContext('2d') as CanvasRenderingContext2D;
 
-    this.logoHeight = this.height*0.5;
+    // LOGO 加载，先扔这里
+    this.logoHeight = GAME.VIEW_HEIGHT*0.3;
     this.logoWidth = this.logoHeight*1.29;
     this.logo.src = require("../assets/logo.png");
     this.logo.onload = () => { 
       this.startAnimation();    
     };
+
     // 点击事件
-    canvas.addEventListener("click", (e: MouseEvent) => {
-      // console.log("点击事件");
-      
+    this.CTX_CANVAS.addEventListener("click", (e: MouseEvent) => {
       this.handleCanvasMouseClickEvent(e, "click");
     });
     // 鼠标按下事件
-    canvas.addEventListener("mousedown", (e: MouseEvent) => {
+    //this.CTX_CANVAS.addEventListener("mousedown", (e: MouseEvent) => {
       // console.log("鼠标按下");
       // this.handleCanvasMouseClickEvent(e)
-    })
-    canvas.addEventListener("mouseup", (e: MouseEvent) => {
+    //})
+    // this.CTX_CANVAS.addEventListener("mouseup", (e: MouseEvent) => {
       // console.log("鼠标释放");
       // this.handleCanvasMouseClickEvent(e)
-    })
+    // })
     // 留着做拖动事件再弄这个
     // document.addEventListener("mousemove", (e: MouseEvent) => {
     //   console.log("鼠标移动");
     // })
-    document.body.append(canvas);
   }
 
   /**
@@ -172,6 +165,7 @@ export default class Render{
     this.updateGameObject(GAME.REFRESH_FRAME_TIME);
     // console.log(deltaTime, GAME.REFRESH_FRAME_TIME);
     this.timeStamp = deltaTime;
+    GAME.CAMERA.play(this.CTX_CANVAS);
     window.requestAnimationFrame((deltaTime: number)=>{
       this.render(deltaTime);
     })
@@ -192,10 +186,10 @@ export default class Render{
    */
   public clear(): void{
     // 静态资源都不动的,所以只渲染一次
-    this.CTX.clearRect(0, 0, this.width, this.height);
-    this.CTX_ANIMATION.clearRect(0, 0, this.width, this.height);
-    this.CTX_STATIC.clearRect(0, 0, this.width, this.height);
-    this.CTX_UI.clearRect(0, 0, this.width, this.height);
+    this.CTX.clearRect(0, 0, GAME.RENDERER_WIDTH, GAME.RENDERER_HEIGHT);
+    this.CTX_ANIMATION.clearRect(0, 0, GAME.RENDERER_WIDTH, GAME.RENDERER_HEIGHT);
+    this.CTX_STATIC.clearRect(0, 0, GAME.RENDERER_WIDTH, GAME.RENDERER_HEIGHT);
+    this.CTX_UI.clearRect(0, 0, GAME.RENDERER_WIDTH, GAME.RENDERER_HEIGHT);
   }
 
   /**
@@ -247,13 +241,14 @@ export default class Render{
    */
   private num: number = 0;
   private startAnimation():void{
-    this.CTX.drawImage(this.logo, this.width/2 - this.logoWidth*0.5 , this.height/2 - this.logoHeight*0.5, this.logoWidth, this.logoHeight);
+    this.CTX.drawImage(this.logo, GAME.VIEW_WIDTH/2 - this.logoWidth*0.5 , GAME.VIEW_HEIGHT/2 - this.logoHeight*0.5, this.logoWidth, this.logoHeight);
     this.logoHeight += 0.1;
     this.logoWidth = this.logoHeight*1.29;
     setTimeout(()=>{
       this.num++;
       if( this.num  < 180 ){
         this.startAnimation();
+        GAME.CAMERA.play(this.CTX_CANVAS)
       }
     }, GAME.REFRESH_FRAME_TIME)
   } 
@@ -263,10 +258,11 @@ export default class Render{
    * @param progress 当前进度
    * @param length 总长度
    */
-  public loadProgress( progress: number, length: number): void{
-    this.CTX.clearRect(0, 0, this.width, this.height);
+  public loadProgress( progress: number, length: number): void{    
+    this.CTX.clearRect(0, 0, GAME.RENDERER_WIDTH, GAME.RENDERER_HEIGHT);
     this.CTX.font = "900 23px Arial";
     this.CTX.fillStyle = "#fff";
-    this.CTX.fillText(`加载中 ${(progress/length*100).toFixed(0)}%`, this.width-150,this.height - 30);
+    this.CTX.fillText(`加载中 ${(progress/length*100).toFixed(0)}%`, GAME.VIEW_WIDTH-150, GAME.VIEW_HEIGHT - 30);
+    GAME.CAMERA.play(this.CTX_CANVAS);
   }
 }

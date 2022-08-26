@@ -3,6 +3,7 @@ import Scene from "./scene/scene";
 import Render from "./view/render";
 import Input from "./input/input";
 import Panel from "./scene/panel";
+import Camera from "./camera/camera";
 /**
  * 游戏类，设置属性
  */
@@ -17,6 +18,10 @@ export default class GAME {
   public static VIEW_WIDTH: number = 1200;
   // 背景高度
   public static VIEW_HEIGHT: number = 440;
+  // 计算宽度
+  public static RENDERER_WIDTH: number = 1800;
+  // 计算高度
+  public static RENDERER_HEIGHT: number = 800;
   // 渲染
   public static RENDER: Render;
   // 帧数: 现在为60帧
@@ -31,10 +36,12 @@ export default class GAME {
   public static ENERGY_ATTENUATION_PERCENTAGE = 0.7;
   // 误差系数，小于这个就不处理了
   public static ERROR_COEFFICIENT: number = 0.03;
+  // 相机
+  public static CAMERA: Camera;
   // public static LOADINGLIST: number[] = []
 
   // 游戏启动
-  public static async start(panel: Panel, width?: number, height?: number, x?: number, y?: number,): Promise<string> {
+  public static async start(panel: Panel, width?: number, height?: number, x?: number, y?: number): Promise<string> {
     try {
       // 屏幕宽高
       const screenWidth:number = document.body.clientWidth;
@@ -46,6 +53,9 @@ export default class GAME {
       this.BASE_X_Offset = x || screenWidth/2 - this.VIEW_WIDTH/2;
       this.BASE_Y_Offset = y || screenHeight/2 - this.VIEW_HEIGHT/2;
 
+      // 初始化相机
+      this.CAMERA = new Camera(this.BASE_X_Offset, this.BASE_Y_Offset, this.VIEW_WIDTH, this.VIEW_HEIGHT, 0, 0);
+      
       // 3 秒后渲染第一个panel
       setTimeout(async () => {
         // 激活scene
@@ -68,7 +78,7 @@ export default class GAME {
       }, 3000)
 
       // 创建渲染对象
-      this.RENDER = new Render(this.BASE_X_Offset, this.BASE_Y_Offset, this.VIEW_WIDTH, this.VIEW_HEIGHT);
+      this.RENDER = new Render();
       // 启动键盘事件
       Input.startLisEventListenerKeyboard();
 

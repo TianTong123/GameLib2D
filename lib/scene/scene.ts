@@ -46,7 +46,7 @@ export default class Scene{
     return new Promise(async (resolve, reject) => { 
       let list: Promise<Result<string>>[] = [...this.imgResources.map(e => e.load()), ...this.gifResources.map(e => e.load())]
       let i: number = 0;
-      for await ( let res of list ){ // 高级写法 res 是返回的结果
+      for await ( let res of list ){ // 循环promise数组 res 是返回的结果
         GAME.RENDER.loadProgress( ++i, list.length );
       }
       resolve(new Result(1, "加载完成", ""));

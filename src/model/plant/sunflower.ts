@@ -2,12 +2,17 @@ import Buff from "../buff";
 import GameObject from "../../../lib/model/gameObject";
 import GameAnimation from "../../../lib/animation/gameAnimation";
 import Plant from "../plant";
+import GAME from "../../../lib/game";
+import Input from "../../../lib/input/input";
 // import Sunshine from "../sunshine";
 
 /**
  * 向日葵
  */
 export default class Sunflower extends Plant{
+  private x1: number = 0;
+  private x2: number = 0;
+  
     // 构造器
     constructor(row: number, column: number, width?: number, height?: number){
       super();
@@ -18,16 +23,16 @@ export default class Sunflower extends Plant{
       this.width = width || 60;
       this.height = height || 69;
       this.setAni(require("@/assets/plant/sunflower.gif"));
-      // this.setAni(require("@/assets/bullet/PB001.gif"));
       // this.createRigidBody(56, 66);
       this.createRigidBody();
+      // GAME.CAMERA.setSize(300, 200)
     }
     
     /**
      * 攻击方法
      */
     update (deltaTime: number): void{
-      // console.log("欸嘿"); 
+     // GAME.CAMERA.setViewPosition(GAME.CAMERA.getViewX() + Input.getHorizontalAxis()*5, GAME.CAMERA.getViewY() + Input.getVerticallAxis()*5);
     }
 
     // 碰撞

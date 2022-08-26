@@ -119,6 +119,6 @@ export default class RigidBody {
    * gameobject会调用这个更新中心坐标
    */
   public setCenter() {
-    this.centerPoint = new Vector(GAME.VIEW_WIDTH-(this.gameObject.x + this.halfWidth + this.offsetX), this.gameObject.y + this.halfHeight + this.offsetY );
+    this.centerPoint = new Vector(GAME.RENDERER_WIDTH-(this.gameObject.x + this.halfWidth + this.offsetX), this.gameObject.y + this.halfHeight + this.offsetY );
   }
 }
