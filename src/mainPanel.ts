@@ -94,11 +94,11 @@ export default class MianPanel extends Panel {
 
         new NormalZombie(8,  2);
 
-        // new Peashooter(4,  0);
-        // new Peashooter(4,  1);
-        // new Peashooter(4,  2);
-        // new Peashooter(4,  3);
-        // new Peashooter(4,  4);
+        new Peashooter(4,  0);
+        new Peashooter(4,  1);
+        new Peashooter(4,  2);
+        new Peashooter(4,  3);
+        new Peashooter(4,  4);
 
         // new Peashooter(5,  0);
         // new Peashooter(5,  1);

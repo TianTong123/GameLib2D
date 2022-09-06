@@ -18,8 +18,10 @@ export default class UIObject implements GameBase{
   public show: Boolean = true;
 
   // 旋转角度（可以考虑的扩展）
-  private rotation: number = 0
+  private rotation: number = 0;
   
+  // 是否相对， true： 相对于相机固定， false， 相对于scene 固定
+  // private isRelavite: boolean = false;
 
   // id
   public id: string = "";

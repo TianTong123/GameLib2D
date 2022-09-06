@@ -4,6 +4,7 @@ import Render from "./view/render";
 import Input from "./input/input";
 import Panel from "./scene/panel";
 import Camera from "./camera/camera";
+import UI from "./ui/UI";
 /**
  * 游戏类，设置属性
  */
@@ -38,6 +39,8 @@ export default class GAME {
   public static ERROR_COEFFICIENT: number = 0.03;
   // 相机
   public static CAMERA: Camera;
+  // 当前活动的UI
+  public static ACTIVE_UI: UI;
   // public static LOADINGLIST: number[] = []
 
   // 游戏启动

@@ -1,14 +1,13 @@
 import GAME from "../game";
-import GameBase from "../interface/gameBase";
 
 /**
  * 相机类
  */
-export default class Camera implements GameBase {
+export default class Camera {
 
   // 相机坐标
-  public x: number;
-  public y: number;
+  public X: number;
+  public Y: number;
 
   // 相机大小
   private width: number;
@@ -23,11 +22,11 @@ export default class Camera implements GameBase {
 
   // 相机canvas
   private camera: HTMLCanvasElement;
-  private CAMERA_CTX: CanvasRenderingContext2D;
+  public CAMERA_CTX: CanvasRenderingContext2D;
 
   constructor(x: number, y: number, width: number, height: number, viewX: number, viewY: number){
-    this.x = x;
-    this.y = y;
+    this.X = x;
+    this.Y = y;
     this.width = width;
     this.height = height;
     this.viewX = viewX;
@@ -53,9 +52,9 @@ export default class Camera implements GameBase {
   }
 
   // 设置位置
-  public setPosition( x: number, y: number ): void{
-    this.x = x;
-    this.y = y;
+  public setPosition( X: number, Y: number ): void{
+    this.X = X;
+    this.Y = Y;
   }
 
   // 设置录像位置
@@ -69,7 +68,9 @@ export default class Camera implements GameBase {
    * @arg ctx: 渲染结果
    */
   public play( ctx: HTMLCanvasElement ): void{
+    // 清空画板
     this.CAMERA_CTX.clearRect(0, 0, this.width, this.height);
+    // 绘制scene
     this.CAMERA_CTX.drawImage(ctx, this.viewX, this.viewY);
   }
 

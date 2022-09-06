@@ -101,7 +101,7 @@ export default class Render{
    * 渲染静态资源方法
    * 把 staticList 全部放到 canvas 上
    */
-  public renderStatic() {
+  public renderStatic(): void {
     for(let i = 0, len = this.staticList.length; i < len; i ++){
       let view: View = this.staticList[i];
       this.CTX_STATIC.drawImage(view.getImg(), view.getX(), view.getY(), view.getWidth(), view.getHeight()); 
@@ -113,12 +113,23 @@ export default class Render{
    * 渲染UI方法
    * 把 UIList 全部放到 canvas 上
    */
-   public renderUI() {
+   public renderUI(): void  {
     for(let i = 0, len = this.UIList.length; i < len; i ++){
       let view: View = this.UIList[i].view;
       this.CTX_UI.drawImage(view.getImg(), view.getX(), view.getY(), view.getWidth(), view.getHeight()); 
     }
     this.CTX.drawImage(this.CANVAS_UI, 0, 0);
+  }
+
+  /**
+   * 渲染跟随相机的ui
+   */
+  public renderCAMERAUI(): void{
+    const list = GAME.ACTIVE_UI?.UILIST || [];
+    for(let i = 0, len = list.length; i < len; i ++){
+      let view: View = list[i].view;
+      GAME.CAMERA.CAMERA_CTX.drawImage(view.getImg(), view.getX(), view.getY(), view.getWidth(), view.getHeight()); 
+    }
   }
 
   /**
@@ -165,7 +176,10 @@ export default class Render{
     this.updateGameObject(GAME.REFRESH_FRAME_TIME);
     // console.log(deltaTime, GAME.REFRESH_FRAME_TIME);
     this.timeStamp = deltaTime;
+    // 拍摄
     GAME.CAMERA.play(this.CTX_CANVAS);
+    // 拍摄完当前帧才绘制UI
+    this.renderCAMERAUI();
     window.requestAnimationFrame((deltaTime: number)=>{
       this.render(deltaTime);
     })
