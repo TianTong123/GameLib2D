@@ -8,6 +8,7 @@ import UIObject from "../ui/UIObject";
 import ImgInfo from "../view/imgInfo";
 import GitInfo from "../gif/gitInfo";
 /**
+ * (已全部移除动态加载。如果要找回来，请到github找 on Mon May 16 2022 “更改动量守恒” 这次修改来找回来)
  * 场景类
  */
 export default class Scene{
@@ -17,8 +18,6 @@ export default class Scene{
   public STATIC_LIST: Array<View> = [];
   // 动画资源
   public ANIMATION_LIST: Array<GameAnimation> = [];
-  // UI资源
-  public UI_LIST: Array<UIObject> = [];
   // 刚体数组
   public RIGIDBODY_LIST: Array<RigidBody> = [];
   // 静态图片资源
@@ -38,7 +37,7 @@ export default class Scene{
   // 加载组件数组，放到 render 进行渲染
   public refreshComponent(): void {
     // 放进渲染数组
-    GAME.RENDER.setList(this.STATIC_LIST, this.ANIMATION_LIST, this.UI_LIST, this.GAME_OBJECT_LIST, this.RIGIDBODY_LIST);
+    GAME.RENDER.setList(this.STATIC_LIST, this.ANIMATION_LIST, this.GAME_OBJECT_LIST, this.RIGIDBODY_LIST);
   }
 
   // 加载 scene 里面的资源
@@ -77,17 +76,6 @@ export default class Scene{
   public switchAnimation( id: string, ani: GameAnimation ): void{
     let index: number = this.ANIMATION_LIST.findIndex( e => e.id === id );
     this.ANIMATION_LIST[index] = ani;
-  }
-
-  // 添加UI资源
-  public addUI( ui: UIObject ): void{
-    
-    this.UI_LIST.push( ui );
-  }
-
-  // 移除UI资源
-  public deleteUI( id: string ): void{
-    this.UI_LIST = this.UI_LIST.filter( e => e.id !== id );
   }
 
   // 添加静态资源

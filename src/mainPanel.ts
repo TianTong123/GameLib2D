@@ -15,6 +15,7 @@ import NormalZombie from "./model/zombie/normalZombie";
 import Panel from "../lib/scene/panel";
 import TestPanel from "./scene/testPanel";
 import GAME from "../lib/game";
+import UI from "../lib/ui/UI";
 /**
  * 游戏界面
  */
@@ -39,9 +40,6 @@ export default class MianPanel extends Panel {
 
     public run(): void{
         
-       
-        // 加载资源
-        // await this.scene.loadAssets();
         // 切换 panel
         // setTimeout(async ()=>{
         //     let test: TestPanel = new TestPanel();
@@ -128,7 +126,7 @@ export default class MianPanel extends Panel {
 
         // new Plane(0, 4);
         // new Wall(8,0);
-        new UIObject(require("@/assets/UI/Button.png"), 0, 0, 50, 30);
+       
         // setTimeout(async ()=>{
         //     new Peashooter(3,  1)
         // }, 500)
@@ -149,6 +147,13 @@ export default class MianPanel extends Panel {
 
         // 启动
         // scene.start();
+        
+        // 菜单按钮
+        const panel1: UI = new UI();
+        panel1.addUIObject( new UIObject(require("@/assets/UI/Button.png"), 0, 0, 50, 30) );
+        // 暂停后的ui
+        const panel2: UI = new UI();
+        panel2.addUIObject( new UIObject(require("@/assets/UI/dialog.png"), 100, 200, 308, 249) );
     }
 
     public getScene(): Scene{

@@ -21,7 +21,7 @@ export default class Camera {
   private name: string = "";
 
   // 相机canvas
-  private camera: HTMLCanvasElement;
+  public CAMERA_HTML: HTMLCanvasElement;
   public CAMERA_CTX: CanvasRenderingContext2D;
 
   constructor(x: number, y: number, width: number, height: number, viewX: number, viewY: number){
@@ -32,21 +32,21 @@ export default class Camera {
     this.viewX = viewX;
     this.viewY = viewY;
     // 相机
-    this.camera = document.createElement("canvas"); 
-    this.camera.width = width;
-    this.camera.height = height;
-    this.camera.setAttribute("style", `left: ${x}px; top: ${y}px; position: absolute; background-color: #212c35`);
-    this.CAMERA_CTX = this.camera.getContext('2d') as CanvasRenderingContext2D;
+    this.CAMERA_HTML = document.createElement("canvas"); 
+    this.CAMERA_HTML.width = width;
+    this.CAMERA_HTML.height = height;
+    this.CAMERA_HTML.setAttribute("style", `left: ${x}px; top: ${y}px; position: absolute; background-color: #212c35`);
+    this.CAMERA_CTX = this.CAMERA_HTML.getContext('2d') as CanvasRenderingContext2D;
     // 固定相机
-    document.body.append(this.camera);
+    document.body.append(this.CAMERA_HTML);
   }
 
   // 设置大小
   public setSize(width: number, height: number): void{
     this.width = width;
     this.height = height;
-    this.camera.width = width;
-    this.camera.height = height;
+    this.CAMERA_HTML.width = width;
+    this.CAMERA_HTML.height = height;
     GAME.VIEW_WIDTH = width;
     GAME.VIEW_HEIGHT = height;
   }
@@ -73,7 +73,7 @@ export default class Camera {
     // 绘制scene
     this.CAMERA_CTX.drawImage(ctx, this.viewX, this.viewY);
   }
-
+  
   public getName(): string {
     return this.name;
   }

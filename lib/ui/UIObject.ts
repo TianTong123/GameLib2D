@@ -3,6 +3,7 @@ import GameBase from "../interface/gameBase";
 const { v4: uuidv4 } = require('uuid');
 import GAME from "../game";
 import Vector from "../util/vector";
+import ImgInfo from "../view/imgInfo";
 
 
 // UI 对象
@@ -15,7 +16,7 @@ export default class UIObject implements GameBase{
   private height: number = 0;
 
   // 是否显示
-  public show: Boolean = true;
+  public SHOW: Boolean = true;
 
   // 旋转角度（可以考虑的扩展）
   private rotation: number = 0;
@@ -41,9 +42,11 @@ export default class UIObject implements GameBase{
     this.width = width || 0;
     this.height = height || 0;
     this.zIndex = zIndex || 0;
-    this.view = new View(GAME.ACTIVE_SCENE.getImgInfo(url), this.x, this.y, this.width, this.height);
+    const imgInfo: ImgInfo = new ImgInfo(url);
+    imgInfo.load();
+    this.view = new View(imgInfo, this.x, this.y, this.width, this.height);
     this.view.setId(this.id);
-    GAME.ACTIVE_SCENE.addUI(this);
+    GAME.UI_MAMAGER.addUIOBJ(this);
   };
 
   // 点击事件
@@ -58,14 +61,14 @@ export default class UIObject implements GameBase{
    */
   public checkPosInRotationRect( point: Vector ): void{
     // rigidbody 的常规操作，取一半，拿中心点
-    let halfWidth: number = this.width / 2;
-    let halfHeight: number = this.height / 2;
-    let centerPoint: Vector = new Vector(this.x + halfWidth, this.y + halfHeight );
+    const halfWidth: number = this.width / 2;
+    const halfHeight: number = this.height / 2;
+    const centerPoint: Vector = new Vector(this.x + halfWidth, this.y + halfHeight );
     // 转换角度
-    let r: number = -this.rotation * (Math.PI / 180);
+    const r: number = -this.rotation * (Math.PI / 180);
     // 拿到旋转后的坐标
-    let nTempX: number = centerPoint.x + (point.x - centerPoint.x) * Math.cos(r) - (point.y - centerPoint.y) * Math.sin(r);
-    let nTempY: number = centerPoint.y + (point.x - centerPoint.x) * Math.sin(r) + (point.y - centerPoint.y) * Math.cos(r);
+    const nTempX: number = centerPoint.x + (point.x - centerPoint.x) * Math.cos(r) - (point.y - centerPoint.y) * Math.sin(r);
+    const nTempY: number = centerPoint.y + (point.x - centerPoint.x) * Math.sin(r) + (point.y - centerPoint.y) * Math.cos(r);
     if (nTempX > centerPoint.x - halfWidth && nTempX < centerPoint.x + halfWidth && nTempY > centerPoint.y - halfHeight && nTempY < centerPoint.y + halfHeight) {
       this.click()
     }
@@ -74,7 +77,6 @@ export default class UIObject implements GameBase{
   // 注销方法
   public destroy(): void{
     // 后续更正为只保留gameObjectList, 其他数组就用map来取
-    GAME.ACTIVE_SCENE.deleteUI(this.id);
-    GAME.ACTIVE_SCENE.refreshComponent();
+    GAME.UI_MAMAGER.deleteUIOBJ(this.id);
   } 
 }

@@ -4,7 +4,7 @@ import Render from "./view/render";
 import Input from "./input/input";
 import Panel from "./scene/panel";
 import Camera from "./camera/camera";
-import UI from "./ui/UI";
+import UIManager from "./ui/UIManager";
 /**
  * 游戏类，设置属性
  */
@@ -39,8 +39,8 @@ export default class GAME {
   public static ERROR_COEFFICIENT: number = 0.03;
   // 相机
   public static CAMERA: Camera;
-  // 当前活动的UI
-  public static ACTIVE_UI: UI;
+  // UIManage
+  public static UI_MAMAGER: UIManager;
   // public static LOADINGLIST: number[] = []
 
   // 游戏启动
@@ -58,8 +58,17 @@ export default class GAME {
 
       // 初始化相机
       this.CAMERA = new Camera(this.BASE_X_Offset, this.BASE_Y_Offset, this.VIEW_WIDTH, this.VIEW_HEIGHT, 0, 0);
-      
-      // 3 秒后渲染第一个panel
+
+      // 新建UI管理、
+      this.UI_MAMAGER = new UIManager();
+
+      // 创建渲染对象
+      this.RENDER = new Render();
+
+      // 启动键盘事件
+      Input.startLisEventListenerKeyboard();
+
+      // 3 秒后渲染第一个panel和UI
       setTimeout(async () => {
         // 激活scene
         this.ACTIVE_SCENE = panel.getScene();
@@ -79,12 +88,7 @@ export default class GAME {
         // 开始渲染
         this.RENDER.startRender();
       }, 3000)
-
-      // 创建渲染对象
-      this.RENDER = new Render();
-      // 启动键盘事件
-      Input.startLisEventListenerKeyboard();
-
+         
       return "游戏启动完毕，起飞！"
     } catch (err) {
       console.log(err);
