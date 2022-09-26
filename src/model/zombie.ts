@@ -16,7 +16,7 @@ export default abstract class Zombie extends GameObject{
   }
 
   // 碰撞
-  collision( gameObject: GameObject ): void {
+  public collision( gameObject: GameObject ): void {
     // 撞到子弹 
     if( gameObject instanceof Bullet ){
       this.HP -=  gameObject.getHurtValue();

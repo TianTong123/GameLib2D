@@ -28,7 +28,7 @@ export default class GAME {
   // 帧数: 现在为60帧
   public static REFRESH_FRAME: number = 60;
   // 固定刷新时间
-  public static REFRESH_FRAME_TIME: number = 1000 / 60;
+  public static FIXED_REFRESH_FRAME_TIME: number = 1 / 60;
   // 计算频率
   public static COMPUTE_TIME: number = 10; // 以后扩展就是按这个时间来算。计算按这个，渲染按上面
   // 当前活动的场景
@@ -41,6 +41,8 @@ export default class GAME {
   public static CAMERA: Camera;
   // UIManage
   public static UI_MAMAGER: UIManager;
+  // 时间速率
+  public static TIME_SCALE: number = 1;
   // public static LOADINGLIST: number[] = []
 
   // 游戏启动
@@ -86,7 +88,7 @@ export default class GAME {
         panel.run();
 
         // 开始渲染
-        this.RENDER.startRender();
+        this.RENDER.startRender(Date.now());
       }, 3000)
          
       return "游戏启动完毕，起飞！"

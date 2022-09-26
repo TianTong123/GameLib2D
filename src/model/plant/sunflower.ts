@@ -31,8 +31,12 @@ export default class Sunflower extends Plant{
     /**
      * 攻击方法
      */
-    update (deltaTime: number): void{
+    public update (deltaTime: number): void{
       GAME.CAMERA.setViewPosition(GAME.CAMERA.getViewX() + Input.getHorizontalAxis()*5, GAME.CAMERA.getViewY() + Input.getVerticallAxis()*5);
+    }
+
+    public fixedUpdate(deltaTime: number): void {
+      
     }
 
     // 碰撞

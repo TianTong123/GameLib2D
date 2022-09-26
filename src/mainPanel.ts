@@ -151,13 +151,15 @@ export default class MianPanel extends Panel {
         // 菜单按钮
         const panel1: UI = new UI();
         panel1.addUIObject( new UIObject(require("@/assets/UI/Button.png"), 0, 0, 50, 30) );
+        GAME.UI_MAMAGER.UI_LIST.push(panel1);
         // 暂停后的ui
         const panel2: UI = new UI();
-        panel2.addUIObject( new UIObject(require("@/assets/UI/dialog.png"), 100, 200, 308, 249) );
+        panel2.addUIObject( new UIObject(require("@/assets/UI/dialog.png"), 250, 70, 308, 249) );
+        GAME.UI_MAMAGER.UI_LIST.push(panel2);
+        panel2.SHOW = false;
     }
 
     public getScene(): Scene{
         return this.scene;
     }
-
 }

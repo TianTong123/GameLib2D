@@ -68,21 +68,28 @@ export default abstract class GameObject implements GameBase {
     // 刷新方法方法
     public abstract update(deltaTime: number): void;
 
+    // 固定刷新方法方法
+    public abstract fixedUpdate(deltaTime: number): void;
+
     // 碰撞方法 延迟到后面写点场景来实现
     public abstract collision( obj: GameObject ): void;
 
     // 每帧处理方法
     public handleUpdate(deltaTime: number): void{
-        
-        let time = deltaTime / 100;
-        // X轴上力的处理
-        this.handleForceX(time);
-        // Y轴上力的处理
-        this.handleForceY(time);
-        // 更新刚体投影坐标
-        this.rigidBody?.setCenter();
         // 调用一次更新事件
         this.update(deltaTime);
+    }
+
+    // 固定帧处理办法
+    public handleFixedUpdate(deltaTime: number){
+        // X轴上力的处理
+        this.handleForceX(deltaTime);
+        // Y轴上力的处理
+        this.handleForceY(deltaTime);
+        // 更新刚体投影坐标
+        this.rigidBody?.setCenter();
+        //调用一次固定更新事件
+        this.fixedUpdate(deltaTime);
     }
 
     //  X轴力的处理
@@ -137,7 +144,7 @@ export default abstract class GameObject implements GameBase {
         this.collision(obj);
 
         // 更新对象
-        this.handleUpdate(GAME.REFRESH_FRAME_TIME);
+        this.handleUpdate(0);
     }
 
     // 处理水平碰撞
@@ -164,7 +171,7 @@ export default abstract class GameObject implements GameBase {
         this.collision(obj);
 
         // 更新对象
-        this.handleUpdate(GAME.REFRESH_FRAME_TIME)
+        this.handleUpdate(0)
     }
 
     // 动量守恒

@@ -124,7 +124,7 @@ export default class Render {
   /**
    * 渲染跟随相机的ui
    */
-  public renderCAMERAUI(): void {
+  public renderCamerUI(): void {
     const list = GAME.UI_MAMAGER.getAllShowOBJ();
     for (let i = 0, len = list.length; i < len; i++) {
       let view: View = list[i].view;
@@ -153,6 +153,15 @@ export default class Render {
   }
 
   /**
+   * fixed更新 gameObject 
+   */
+   public fixedUpdateGameObject(deltaTime: number): void {
+    for (let i = 0, len = this.gameObjectList.length; i < len; i++) {
+      this.gameObjectList[i]?.handleFixedUpdate(deltaTime);
+    }
+  }
+
+  /**
    * 刚体检测
    */
   public handlecollision(): void {
@@ -163,34 +172,35 @@ export default class Render {
     }
   }
 
+
   // 总渲染
-  public render(deltaTime: number): void {
+  public render(deltaTime: number): void{
     this.clear();
     this.renderStatic();
     this.renderAnimation();
     this.renderUI();
     this.handlecollision();
-    // this.updateGameObject((deltaTime - this.timeStamp)/100);
-    // 这里必须固定时间，不然会因为每次时间的不同导致一些意想不到的bug;
-    // 这里先前是 计算完所以完成时间的。现在改为固定
-    this.updateGameObject(GAME.REFRESH_FRAME_TIME);
-    // console.log(deltaTime, GAME.REFRESH_FRAME_TIME);
+    this.updateGameObject( (deltaTime - this.timeStamp)/1000 );
     this.timeStamp = deltaTime;
     // 拍摄
     GAME.CAMERA.play(this.CTX_CANVAS);
     // 拍摄完当前帧才绘制UI(先放这里)
-    this.renderCAMERAUI();
-    window.requestAnimationFrame((deltaTime: number) => {
-      this.render(deltaTime);
-    })
+    this.renderCamerUI();
   }
 
-
-  // 改为 requestAnimationFrame 渲染
-  public startRender(): void {
+  /**
+   * 启动渲染
+   * 改为 requestAnimationFrame 渲染
+   * @param deltaTime 当前帧所需时间
+   */
+  public startRender(deltaTime: number): void {
+    // 乘时间倍率，实现时间快慢
+    this.render(deltaTime * GAME.TIME_SCALE);
+    // 这里必须固定时间，不然会因为每次时间的不同导致一些意想不到的bug;
+    this.fixedUpdateGameObject(GAME.FIXED_REFRESH_FRAME_TIME * GAME.TIME_SCALE);
     // 取得增量时间
     window.requestAnimationFrame((deltaTime: number) => {
-      this.render(deltaTime);
+      this.startRender(deltaTime);
     })
   }
 
@@ -245,6 +255,7 @@ export default class Render {
     for (let i = 0, len = this.UIOBJList.length; i < len; i++) {
       this.UIOBJList[i].checkPosInRotationRect(new Vector(x, y));
     }
+    this.render(Date.now());
   }
 
   /**
@@ -261,7 +272,7 @@ export default class Render {
         this.startAnimation();
         GAME.CAMERA.play(this.CTX_CANVAS)
       }
-    }, GAME.REFRESH_FRAME_TIME)
+    }, GAME.FIXED_REFRESH_FRAME_TIME)
   }
 
   /**

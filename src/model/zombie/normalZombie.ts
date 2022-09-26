@@ -7,7 +7,7 @@ export default class NormalZombie extends Zombie{
     this.HP = 200;
     this.column = column;
     this.row = row;
-    this.speed = -0.3;
+    this.speed = -3;
     this.x = this.getOffsetX(-40);
     this.y = this.getOffsetY(-10);
     this.width = width || 120;
@@ -42,4 +42,7 @@ export default class NormalZombie extends Zombie{
     }
   }
 
+  public fixedUpdate(deltaTime: number): void{
+    
+  }
 }

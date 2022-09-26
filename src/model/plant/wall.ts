@@ -43,12 +43,16 @@ export default class Wall extends Plant {
   /**
    * 攻击方法
    */
-  update(deltaTime: number): void {
+  public update(deltaTime: number): void {
     
   }
 
+  public fixedUpdate(deltaTime: number): void {
+
+  }
+
   // 碰撞
-  collision(go: GameObject): void {
+  public collision(go: GameObject): void {
     // console.log("欸嘿", go); 
   }
 }

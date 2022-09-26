@@ -67,7 +67,7 @@ export default class GameAnimation implements GameBase{
    */
   public getCurrentFrame(): HTMLCanvasElement {
     // 计算当前播放时间
-    this.playTime += GAME.REFRESH_FRAME_TIME;
+    this.playTime += GAME.FIXED_REFRESH_FRAME_TIME * GAME.TIME_SCALE * 1000;
     // 向下取整 ~是否运算, 用32位二进制表示当前值,舍弃小数.然后做否运算,如果为负数就再进行一次补码运算. 相当于 当前数字取负数然后-1
     // 比如 ~2 就是 -2 -1 = 3, 做两次运算就是接上去 -(-3) -1 = 2.因为会舍弃小数,就会有向下取整的效果 
     // 做两次就是正数

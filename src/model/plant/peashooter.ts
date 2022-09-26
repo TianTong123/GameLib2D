@@ -28,7 +28,7 @@ export default class Peashooter extends Plant {
   /**
    * 攻击方法
    */
-  update(deltaTime: number): void {
+   public update(deltaTime: number): void {
     // if(Input.getKeyDown(KEYCODE.Control_L)){
     //   console.log("我按ctrl了");
       
@@ -44,15 +44,19 @@ export default class Peashooter extends Plant {
     // }
     // Input.getHorizontalAxis(); Input.getVerticallAxis()
     // console.log(Input.getHorizontalAxis(), Input.getVerticallAxis());
-    // console.log(deltaTime, GAME.REFRESH_FRAME_TIME);
+    // console.log(deltaTime, GAME.FIXED_REFRESH_FRAME_TIME);
     
-    this.time += GAME.REFRESH_FRAME_TIME;
-    if( this.time / 3000 > 1){
+   
+  }
+  
+  public fixedUpdate(deltaTime: number): void {
+    this.time += deltaTime;
+    if( this.time / 3 > 1){
       new Bullet({
         name: "PB00",
         isPierce: false,
-        hurtValue: 50,
-        speed: 30,
+        hurtValue: 20,
+        speed: 300,
         isAll: true,
         range: -1,
         type: 0,
@@ -68,7 +72,7 @@ export default class Peashooter extends Plant {
   }
 
   // 碰撞
-  collision(go: GameObject): void {
+  public collision(go: GameObject): void {
     // console.log("欸嘿", go); 
   }
 }
