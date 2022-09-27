@@ -18,7 +18,7 @@ export default class Plane extends Plant {
     this.width = width || 800;
     this.height = height || 80;
     this.createView(require("@/assets/LogoLine.png"), this.x, this.y, this.width, this.height);
-    this.createRigidBody();
+
     // this.setGravity(true);
   }
 

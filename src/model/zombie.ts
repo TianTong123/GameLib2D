@@ -12,13 +12,13 @@ export default abstract class Zombie extends GameObject{
   
   constructor(){
     super();
-    this.setVX(this.speed);
+    // this.setVX(this.speed);
   }
 
   // 碰撞
   public collision( gameObject: GameObject ): void {
     // 撞到子弹 
-    if( gameObject instanceof Bullet ){
+    if( gameObject instanceof Bullet ){      
       this.HP -=  gameObject.getHurtValue();
     }
     // 没血就死亡
@@ -33,7 +33,7 @@ export default abstract class Zombie extends GameObject{
    * 设置动画
    * @param url ： gif路径
    */
-  setAni( url: string ): void{
+  public setAni( url: string ): void{
     this.createAnimation(url, this.x, this.y, this.width, this.height);
     this.getAniMation().setLoop(true);
   }
@@ -42,7 +42,7 @@ export default abstract class Zombie extends GameObject{
    * 切换动画
    * @param url ： gif路径
    */
-  switchAni( url: string ): void{
+  public switchAni( url: string ): void{
     this.switchAnimation(url, this.x, this.y, this.width, this.height)
   }
 

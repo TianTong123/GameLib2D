@@ -18,7 +18,6 @@ export default class Wall extends Plant {
     this.width = width || 80;
     this.height = height || 800;
     this.createView(require("@/assets/SodRoll.png"), this.x, this.y, this.width, this.height);
-    this.createRigidBody();
     // this.setGravity(true);
   }
 

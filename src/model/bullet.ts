@@ -1,5 +1,6 @@
 import GameAnimation from "lib/animation/gameAnimation";
 import GameBase from "lib/interface/gameBase";
+import RigidBody from "../../lib/rigidBody/rigidBody";
 import GameObject from "../../lib/model/gameObject";
 import Global from "../public/Global";
 import Plant from "./plant";
@@ -58,11 +59,16 @@ export default class Bullet extends Plant {
     this.width = args.width || 60;
     this.height = args.height || 69;
     this.createAnimation(require("@/assets/bullet/pb.gif"), this.x, this.y, this.width, this.height);
-    this.createRigidBody(15, 15, 0, 0);
+
     // this.forceX = 1;
     // this.setGravity(true);
-    this.setHandlePhysics(false);
-    this.setVX(this.speed);
+    // this.setHandlePhysics(false);
+    // this.setVX(this.speed);
+
+    const rb: RigidBody = new RigidBody( this, 0, 15, 15, 0, 0 );
+    rb.id = this.id;
+    rb.setHandlePhysics(false);
+    this.setRigidBody(rb);
   }
 
   /**
@@ -79,7 +85,7 @@ export default class Bullet extends Plant {
   }
 
   public fixedUpdate(deltaTime: number): void {
-    
+    this.setX(this.x + this.speed * deltaTime );
   }
 
   // 碰撞

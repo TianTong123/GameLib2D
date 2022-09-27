@@ -22,7 +22,8 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.ts', '.tsx', '.css'],
         alias: {
-            '@': path.join(__dirname, '..')
+            '@': path.join(__dirname, '..'),
+            "@lib": path.join(__dirname, '../lib/')
         }
        
     },

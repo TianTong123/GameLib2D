@@ -1,3 +1,4 @@
+import RigidBody from "../../lib/rigidBody/rigidBody";
 import GameObject from "../../lib/model/gameObject";
 import Global from "../public/Global";
 /**
@@ -11,6 +12,9 @@ export default abstract class Plant extends GameObject{
   
   constructor(){
     super();
+    const rb: RigidBody = new RigidBody( this, 0 );
+    rb.id = this.id;
+    this.setRigidBody(rb);
   }
 
   /**

@@ -1,3 +1,4 @@
+import RigidBody from "../../../lib/rigidBody/rigidBody";
 import Zombie from "../zombie";
 
 export default class NormalZombie extends Zombie{
@@ -13,17 +14,21 @@ export default class NormalZombie extends Zombie{
     this.width = width || 120;
     this.height = height || 90;
     this.setAni(require("@/assets/zombie/Zombie2.gif"));
-    this.createRigidBody(30, 80, 45, 0);
+    // this.createRigidBody(30, 80, 45, 0);
     // this.setGravity(true);
-    this.setVX(this.speed);
     this.getAniMation().setPlaySpeed(1);
+
+    const rb: RigidBody = new RigidBody( this, 0, 30, 80, 45, 0 );
+    rb.id = this.id;
+    rb.setHandlePhysics(false);
+    this.setRigidBody(rb);
   }
   
   public update(deltaTime: number): void {
     // console.log(this.aniFlag);
     
     // 半血二阶段
-    if(this.HP < 100 && this.aniFlag == 0){
+    if(this.HP < 30 && this.aniFlag == 0){
       this.switchAni(require("@/assets/zombie/ZombieLostHead.gif"));
       this.getAniMation().setLoop(true);
       this.aniFlag = 1;
@@ -33,7 +38,7 @@ export default class NormalZombie extends Zombie{
       this.switchAni(require("@/assets/zombie/ZombieDie.gif"));
       this.getAniMation().setLoop(false);
       this.getAniMation().setSpeed(4);
-      this.setVX(0);
+      // this.setVX(0);
       this.aniFlag = 2;
     }
     // 播放完死亡动画后就回收
@@ -43,6 +48,6 @@ export default class NormalZombie extends Zombie{
   }
 
   public fixedUpdate(deltaTime: number): void{
-    
+    this.setX(this.x + this.speed * deltaTime )
   }
 }
