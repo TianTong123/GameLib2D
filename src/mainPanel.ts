@@ -47,9 +47,9 @@ export default class MianPanel extends Panel {
         // }, 5000)
 
         // 设置背景
-        let bg: View = new View(this.scene.getImgInfo(require("@/assets/interface/background1.jpg")), -100, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
-        this.scene.addView(bg);
-        new Sunflower(0,  0);
+        // let bg: View = new View(this.scene.getImgInfo(require("@/assets/interface/background1.jpg")), -100, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
+        // this.scene.addView(bg);
+        // new Sunflower(0,  0);
         // new Sunflower(0,  1);
         // new Sunflower(0,  2);
         // new Sunflower(0,  3);
@@ -68,7 +68,8 @@ export default class MianPanel extends Panel {
         //     new Sunflower(1,  4)
         // }, 2000)
         // new Bullet({ name: "PB00", isPierce: false, hurtValue: 50, speed: 10, isAll: true, range: -1, type: 0, column: 0, row: 0, offsetX: 40, offsetY: 5, width: 26,  height: 20})
-        // new Peashooter(0,  0);
+        // new Bullet({ name: "PB00", isPierce: false, hurtValue: 50, speed: 10, isAll: true, range: -1, type: 0, column: 0, row: 1, offsetX: 40, offsetY: 5, width: 26,  height: 20})
+        new Peashooter(0,  0);
         // new Bullet({
         //     name: "PB00",
         //     isPierce: false,
@@ -84,19 +85,19 @@ export default class MianPanel extends Panel {
         //     width: 26,
         //     height: 20
         //   })
-        new Peashooter(1,  0);
-        new Peashooter(1,  1);
-        new Peashooter(1,  2);
-        new Peashooter(1,  3);
-        new Peashooter(1,  4);
+        // new Peashooter(1,  0);
+        // new Peashooter(1,  1);
+        // new Peashooter(1,  2);
+        // new Peashooter(1,  3);
+        // new Peashooter(1,  4);
 
-        new NormalZombie(8,  2);
+        // new NormalZombie(8,  2);
 
-        new Peashooter(4,  0);
-        new Peashooter(4,  1);
-        new Peashooter(4,  2);
-        new Peashooter(4,  3);
-        new Peashooter(4,  4);
+        // new Peashooter(4,  0);
+        // new Peashooter(4,  1);
+        // new Peashooter(4,  2);
+        // new Peashooter(4,  3);
+        // new Peashooter(4,  4);
 
         // new Peashooter(5,  0);
         // new Peashooter(5,  1);
@@ -124,8 +125,8 @@ export default class MianPanel extends Panel {
         // new Sunflower(4,  3 );
         // new Sunflower(7,  3 );
 
-        // new Plane(0, 4);
-        // new Wall(8,0);
+        new Plane(0, 4);
+        new Wall(8,0);
        
         // setTimeout(async ()=>{
         //     new Peashooter(3,  1)
@@ -150,7 +151,12 @@ export default class MianPanel extends Panel {
         
         // 菜单按钮
         const panel1: UI = new UI();
-        panel1.addUIObject( new UIObject(require("@/assets/UI/Button.png"), 0, 0, 50, 30) );
+        const menuBtn = new UIObject(require("@/assets/UI/Button.png"), 0, 0, 50, 30);
+        menuBtn.setClickEvent(()=>{
+            // 点击将游戏时间速率变为0
+            GAME.TIME_SCALE = GAME.TIME_SCALE ? 0 : 1;
+        })
+        panel1.addUIObject( menuBtn );
         GAME.UI_MAMAGER.UI_LIST.push(panel1);
         // 暂停后的ui
         const panel2: UI = new UI();

@@ -33,6 +33,9 @@ export default class UIObject implements GameBase{
   // 视图资源
   public view: View;
 
+  // 点击事件
+  private clickEvent: Function = ()=>{};
+
   // 构造器
   // 参数就字面意思 url:图片地址
   constructor( url: string, x?: number, y?: number, width?: number, height?: number, zIndex?: number){
@@ -51,7 +54,11 @@ export default class UIObject implements GameBase{
 
   // 点击事件
   public click(): void{
-    console.log("我被点了", this);
+    this.clickEvent();
+  }
+
+  public setClickEvent( fun: Function ): void{
+    this.clickEvent = fun;
   }
 
   /**

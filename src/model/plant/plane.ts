@@ -1,4 +1,5 @@
 import GameObject from "../../../lib/model/gameObject";
+import RigidBody from "../../../lib/rigidBody/rigidBody";
 import Bullet from "../bullet";
 import Plant from "../plant";
 /**
@@ -20,6 +21,12 @@ export default class Plane extends Plant {
     this.createView(require("@/assets/LogoLine.png"), this.x, this.y, this.width, this.height);
 
     // this.setGravity(true);
+    // this.rigidBody.des
+    const rb: RigidBody = new RigidBody( this, 0 );
+    rb.id = this.id;
+    rb.setGravity(false);
+    this.setRigidBody(rb);
+    
   }
 
   // /**

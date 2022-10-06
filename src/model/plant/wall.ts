@@ -1,4 +1,5 @@
 import GameObject from "../../../lib/model/gameObject";
+import RigidBody from "../../../lib/rigidBody/rigidBody";
 import Bullet from "../bullet";
 import Plant from "../plant";
 /**
@@ -18,7 +19,10 @@ export default class Wall extends Plant {
     this.width = width || 80;
     this.height = height || 800;
     this.createView(require("@/assets/SodRoll.png"), this.x, this.y, this.width, this.height);
-    // this.setGravity(true);
+    const rb: RigidBody = new RigidBody( this, 0 );
+    rb.id = this.id;
+    rb.setGravity(false);
+    this.setRigidBody(rb);
   }
 
   // /**

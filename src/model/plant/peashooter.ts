@@ -64,8 +64,8 @@ export default class Peashooter extends Plant {
         row: this.row,
         offsetX: 40,
         offsetY: 5,
-        width: 15,
-        height: 15
+        width: 26, //15,
+        height: 20, //15
       })
       this.time = 0;
     }

@@ -175,12 +175,15 @@ export default class Render {
 
   // 总渲染
   public render(deltaTime: number): void{
+    // 不放在UI里面UIObject 资源
+    this.UIOBJList = GAME.UI_MAMAGER.getAllShowOBJ();
     this.clear();
+    this.updateGameObject( (deltaTime - this.timeStamp)/1000 );
     this.renderStatic();
     this.renderAnimation();
     this.renderUI();
     this.handlecollision();
-    this.updateGameObject( (deltaTime - this.timeStamp)/1000 );
+    
     this.timeStamp = deltaTime;
     // 拍摄
     GAME.CAMERA.play(this.CTX_CANVAS);
@@ -229,8 +232,6 @@ export default class Render {
     this.gameObjectList = gameObjectList;
     // 刚体资源
     this.rigidBodyList = rigidbodyList;
-    // 不放在UI里面UIObject 资源
-    this.UIOBJList = GAME.UI_MAMAGER.UI_OBJ_LIST;
   }
 
   /**

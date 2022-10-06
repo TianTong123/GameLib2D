@@ -12,9 +12,9 @@ export default abstract class Plant extends GameObject{
   
   constructor(){
     super();
-    const rb: RigidBody = new RigidBody( this, 0 );
-    rb.id = this.id;
-    this.setRigidBody(rb);
+    // const rb: RigidBody = new RigidBody( this, 0 );
+    // rb.id = this.id;
+    // this.setRigidBody(rb);
   }
 
   /**

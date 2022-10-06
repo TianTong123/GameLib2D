@@ -43,6 +43,8 @@ export default class RigidBody {
   public isUseGravity: number = 0;
   // 重力系数 默认为10. 就不整9.8了
   private gravityCoefficient: number = 10;
+  // 仿真系数 这玩意用来乘力的，让游戏力的力产生的速度的变化更快
+  private realCoefficient: number = 80;
 
   // 是否启用摩擦力 (放后处理)
   public isUserFriction?: number = 1;
@@ -89,6 +91,39 @@ export default class RigidBody {
   }
 
   /** 
+   *  单位向量
+   * @param rotation 0 - 360  
+   */
+  public setRotation(rotation: number) {
+    this.rotation = rotation;
+    // 计算在x, y偏转角度
+    this.axisX = new Vector(Math.cos(rotation), Math.sin(rotation));
+    this.axisY = new Vector(-Math.sin(rotation), Math.cos(rotation));
+
+    this.getProjectionRadius(this.axisX);
+    this.getProjectionRadius(this.axisY);
+    this.setCenter();
+  }
+
+  /** 
+   * 设置中心点
+   * gameobject会调用这个更新中心坐标
+   */
+  public setCenter() {
+    // this.centerPoint = new Vector(GAME.RENDERER_WIDTH - (this.gameObject.x + this.halfWidth + this.offsetX), this.gameObject.y + this.halfHeight + this.offsetY);
+    this.centerPoint = new Vector(this.gameObject.x + this.halfWidth + this.offsetX, this.gameObject.y + this.halfHeight + this.offsetY);
+    // console.log(this.centerPoint);
+    
+  }
+
+
+  /**********************************************************************************************/
+  /**********************************************************************************************/
+  /****************************        物理处理          *****************************************/
+  /**********************************************************************************************/
+  /**********************************************************************************************/
+
+  /** 
    * 碰撞检测
    * 当所有的轴都满足两个矩形的投影半径相加大于矩形中心点向量的投影的长度的话。说明这两个矩形在这轴并没有相交。
    * 所以只要有一个不相交，就说明没有相交
@@ -118,59 +153,35 @@ export default class RigidBody {
     }
 
     // 辩别方向
-    const distanceH: number = this.getProjectionRadius(axes[0]) + rigidBody.getProjectionRadius(axes[0]) - centerDistanceVertor.dot(axes[0]);
-    const distanceV: number = this.getProjectionRadius(axes[1]) + rigidBody.getProjectionRadius(axes[1]) - centerDistanceVertor.dot(axes[1])
-    if (distanceH < distanceV) {
-      // 水平相撞
-      this.handleHorizontalCollision(rigidBody, distanceV, distanceH);
-      rigidBody.handleHorizontalCollision(this, distanceV, distanceH);
-      return
-    }
+    const distanceH: number = centerDistanceVertor.dot(axes[0]) - this.getProjectionRadius(axes[0]) - rigidBody.getProjectionRadius(axes[0]);
+    const distanceV: number = centerDistanceVertor.dot(axes[1]) - this.getProjectionRadius(axes[1]) - rigidBody.getProjectionRadius(axes[1]);
+    //console.log("-->",centerDistanceVertor.dot(axes[0]),this.getProjectionRadius(axes[0]), rigidBody.getProjectionRadius(axes[0]), centerDistanceVertor.dot(axes[1])  );
+    
+    // if (distanceH < distanceV) {
+    //   // 水平相撞
+    //   this.handleHorizontalCollision(rigidBody, distanceV, distanceH);
+    //   rigidBody.handleHorizontalCollision(this, distanceV, distanceH);
+    //   return
+    // }
 
-    // 垂直相撞
-    this.handleVerticalCollision(rigidBody, distanceV, distanceH);
-    rigidBody.handleVerticalCollision(this, distanceV, distanceH);
+    // // 垂直相撞
+    // this.handleVerticalCollision(rigidBody, distanceV, distanceH);
+    // rigidBody.handleVerticalCollision(this, distanceV, distanceH);
+    this.handleCollision(rigidBody, distanceV, distanceH);
+    rigidBody.handleCollision(this, distanceV, distanceH);
   }
-
-  /** 
-   *  单位向量
-   * @param rotation 0 - 360  
-   */
-  public setRotation(rotation: number) {
-    this.rotation = rotation;
-    // 计算在x, y偏转角度
-    this.axisX = new Vector(Math.cos(rotation), Math.sin(rotation));
-    this.axisY = new Vector(-Math.sin(rotation), Math.cos(rotation));
-
-    this.getProjectionRadius(this.axisX);
-    this.getProjectionRadius(this.axisY);
-    this.setCenter();
-  }
-
-  /** 
-   * 设置中心点
-   * gameobject会调用这个更新中心坐标
-   */
-  public setCenter() {
-    this.centerPoint = new Vector(GAME.RENDERER_WIDTH - (this.gameObject.x + this.halfWidth + this.offsetX), this.gameObject.y + this.halfHeight + this.offsetY);
-  }
-
-
-  /**********************************************************************************************/
-  /**********************************************************************************************/
-  /****************************        物理处理          *****************************************/
-  /**********************************************************************************************/
-  /**********************************************************************************************/
-
 
   //  X轴力的处理
   public handleForceX(deltaTime: number): void {
     // 加速度 a =  F / m 
-    let accelerationX: number = this.forceX / this.mass;
+    const accelerationX: number = this.forceX / this.mass;
     // Vt = V0 + at
-    this.vx += accelerationX * deltaTime;
+    this.vx += accelerationX * this.realCoefficient * deltaTime;
     //s = vt
-    this.gameObject.setX(this.gameObject.x + this.vx * deltaTime)
+    this.gameObject.setX(this.gameObject.x + this.vx * deltaTime);
+
+    // 用完力了，归零
+    this.forceX = 0;
   }
 
   //  Y轴力的处理 因为我是第三象限，所以是重力减回去
@@ -180,10 +191,22 @@ export default class RigidBody {
     let accelerationY: number = ((this.mass * this.gravityCoefficient * this.isUseGravity) - this.forceY) / this.mass;
 
     // Vt = V0 + at
-    this.vy += accelerationY * deltaTime;
+    this.vy += accelerationY * this.realCoefficient * deltaTime;
 
     //s = vt
     this.gameObject.setY(this.gameObject.y += this.vy * deltaTime);
+
+    // 用完力了，归零
+    this.forceY = 0;
+  }
+
+  /**
+   * 设置一个矢量的力
+   * @param vector 矢量
+   */
+  public addForce( vector: Vector ): void{
+    this.forceX += vector.x;
+    this.forceY += vector.y;
   }
 
   // 处理垂直碰撞 
@@ -192,7 +215,8 @@ export default class RigidBody {
     if (this.isHandlePhysics) {
       // 复位处理
       // this.y += this.vy >= 0 ? -distanceV : distanceV;//防止一直下落
-      this.gameObject.setY(this.gameObject.y + this.vy >= 0 ? -distanceV : distanceV);
+      
+      this.gameObject.setY(this.gameObject.y + (this.vy >= 0 ? -distanceV : distanceV));
       // console.log("distanceV: ",distanceV, distanceH);
 
       // this.x += this.vx >= 0 ? -distanceH : distanceH;//防止卡墙
@@ -221,7 +245,7 @@ export default class RigidBody {
     if (this.isHandlePhysics) {
       // 复位处理
       // this.x += this.vx >= 0 ? -distanceH : distanceH;
-      this.gameObject.setX(this.gameObject.x + this.vx >= 0 ? -distanceH : distanceH);//防止卡墙
+      this.gameObject.setX(this.gameObject.x + (this.vx >= 0 ? -distanceH : distanceH));//防止卡墙
       // console.log("distanceH: ",distanceH, distanceH);
       // this.y += this.vy >= 0 ? -distanceV : distanceV;//防止一直下落
 
@@ -241,6 +265,27 @@ export default class RigidBody {
 
     // 更新对象
     this.gameObject.handleUpdate(0)
+  }
+
+  // 处理碰撞
+  public handleCollision(rb: RigidBody, distanceV: number, distanceH: number): void {
+    if (this.isHandlePhysics) {
+      // 复位处理
+      console.log(distanceH, distanceV);
+      
+      this.gameObject.setX(this.gameObject.x + (this.vx >= 0 ? -distanceH : distanceH));//防止卡墙
+      this.gameObject.setY(this.gameObject.y + (this.vy >= 0 ? -distanceV : distanceV));
+
+      // 动量动能守恒处理
+      this.conservationOfMomentum(rb);
+
+      // 碰墙处理
+      if (!rb.isHandlePhysics) {
+        // 碰撞后的物理处理
+        this.vx = -this.vx * GAME.ENERGY_ATTENUATION_PERCENTAGE;
+        this.vy = -this.vy * GAME.ENERGY_ATTENUATION_PERCENTAGE;
+      }
+    }
   }
 
   // 动量守恒
@@ -291,6 +336,10 @@ export default class RigidBody {
 
   public getVX(): number {
     return this.vx
+  }
+
+  public setVX(val: number): void {
+    this.vx= val;
   }
 
   public setVY(val: number): void {
