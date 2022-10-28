@@ -14,7 +14,7 @@ export default class Vector implements GameBase {
   }
 
   // 设置位置
-  setPoint(x: number, y: number){
+  public setPoint(x: number, y: number){
     this.x = x;
     this.y = y;
   }
@@ -35,13 +35,13 @@ export default class Vector implements GameBase {
   }
 
   // 向量乘标量（加上长度）
-  multiply(len: number): Vector {
+  public multiply(len: number): Vector {
     return new Vector(this.x * len, this.y * len);
   }
 
   
   // 取单位向量（除去长度）
-  normalize(): Vector {
+  public normalize(): Vector {
     // 点到原点距离， 也就是长度
     let distance = Math.sqrt(this.x * this.x + this.y * this.y);
     // 去掉长度

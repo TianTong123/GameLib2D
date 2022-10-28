@@ -42,8 +42,13 @@ export default class NormalZombie extends Zombie{
       this.aniFlag = 2;
     }
     // 播放完死亡动画后就回收
-    if(this.aniFlag == 2 && this.getAniMation().isOver()){
-      this.destroy();
+    if(this.aniFlag == 2 ){
+      this.speed = 0; // 死了设速度为0
+      if(this.getAniMation().isOver()){
+        // 等动画播放完
+        this.destroy();
+      }
+      
     }
   }
 

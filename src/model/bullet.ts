@@ -62,17 +62,13 @@ export default class Bullet extends Plant {
     this.height = args.height || 69;
     this.createAnimation(require("@/assets/bullet/pb.gif"), this.x, this.y, this.width, this.height);
 
-    // this.forceX = 1;
-    // this.setGravity(true);
-    // this.setHandlePhysics(false);
-    // this.setVX(this.speed);
-
     const rb: RigidBody = new RigidBody( this, 0, 26, 26, 0, 0 );
     rb.id = this.id;
     rb.setHandlePhysics(true);
     // 给一下水平的力
-    rb.addForce(new Vector(70, 0))
-    rb.setGravity(true);
+    rb.addForce(new Vector(140, 0))
+    // 关闭重力
+    rb.setGravity(false);
     this.setRigidBody(rb);
   }
 
@@ -85,7 +81,7 @@ export default class Bullet extends Plant {
     // 飞出距离就注销
     if(this.x  > 830 || this.y > 700){
       // console.log("寄了");
-      // this.destroy();
+      this.destroy();
     }
   }
 
@@ -94,10 +90,10 @@ export default class Bullet extends Plant {
   }
 
   // 碰撞
-  collision( gameObject: GameObject ): void {
+  public collision( gameObject: GameObject ): void {
     // 撞到植物不处理 
     if( !(gameObject instanceof Plant) ){
-      // this.destroy();
+      this.destroy();
     }
     
   }

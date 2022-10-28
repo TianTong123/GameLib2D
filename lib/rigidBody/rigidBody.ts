@@ -113,7 +113,7 @@ export default class RigidBody {
     // this.centerPoint = new Vector(GAME.RENDERER_WIDTH - (this.gameObject.x + this.halfWidth + this.offsetX), this.gameObject.y + this.halfHeight + this.offsetY);
     this.centerPoint = new Vector(this.gameObject.x + this.halfWidth + this.offsetX, this.gameObject.y + this.halfHeight + this.offsetY);
     // console.log(this.centerPoint);
-    
+
   }
 
 
@@ -153,20 +153,10 @@ export default class RigidBody {
     }
 
     // 辩别方向
+    // 两物体的中心距离向量在对应轴的上的投影减去两个物体各自的投影
     const distanceH: number = centerDistanceVertor.dot(axes[0]) - this.getProjectionRadius(axes[0]) - rigidBody.getProjectionRadius(axes[0]);
     const distanceV: number = centerDistanceVertor.dot(axes[1]) - this.getProjectionRadius(axes[1]) - rigidBody.getProjectionRadius(axes[1]);
-    //console.log("-->",centerDistanceVertor.dot(axes[0]),this.getProjectionRadius(axes[0]), rigidBody.getProjectionRadius(axes[0]), centerDistanceVertor.dot(axes[1])  );
-    
-    // if (distanceH < distanceV) {
-    //   // 水平相撞
-    //   this.handleHorizontalCollision(rigidBody, distanceV, distanceH);
-    //   rigidBody.handleHorizontalCollision(this, distanceV, distanceH);
-    //   return
-    // }
 
-    // // 垂直相撞
-    // this.handleVerticalCollision(rigidBody, distanceV, distanceH);
-    // rigidBody.handleVerticalCollision(this, distanceV, distanceH);
     this.handleCollision(rigidBody, distanceV, distanceH);
     rigidBody.handleCollision(this, distanceV, distanceH);
   }
@@ -204,88 +194,46 @@ export default class RigidBody {
    * 设置一个矢量的力
    * @param vector 矢量
    */
-  public addForce( vector: Vector ): void{
+  public addForce(vector: Vector): void {
     this.forceX += vector.x;
     this.forceY += vector.y;
   }
 
-  // 处理垂直碰撞 
-  // obj： 撞的对象 distanceV: 嵌进去的垂直距离
-  public handleVerticalCollision(rb: RigidBody, distanceV: number, distanceH: number): void {
-    if (this.isHandlePhysics) {
-      // 复位处理
-      // this.y += this.vy >= 0 ? -distanceV : distanceV;//防止一直下落
-      
-      this.gameObject.setY(this.gameObject.y + (this.vy >= 0 ? -distanceV : distanceV));
-      // console.log("distanceV: ",distanceV, distanceH);
-
-      // this.x += this.vx >= 0 ? -distanceH : distanceH;//防止卡墙
-
-      // 动量动能守恒处理
-      this.conservationOfMomentum(rb);
-
-      // 碰墙处理
-      if (!rb.isHandlePhysics) {
-        // 碰撞后的物理处理
-        this.vy = -this.vy * GAME.ENERGY_ATTENUATION_PERCENTAGE;
-      }
-
+  // 处理碰撞
+  public handleCollision(rb: RigidBody, distanceV: number, distanceH: number): void {
+    if (!this.isHandlePhysics) {
+      return
     }
+    // 是水平方向为最小值吗？ 绝对值）
+    const isHandleHorizontal: boolean = Math.abs(distanceH) < Math.abs(distanceV);
+
+    if (isHandleHorizontal) {
+      /**
+       * 如果是横轴为最小值，说明是在横轴发生了碰撞。计算在垂直方向的卡进去的路程，然后还原回来让物体一直在表面
+       * 计算陷进去的值
+       * distanceH / halfWidth = distanceV / halfHeight
+       * 由上式变形得到下面
+       */
+      distanceV = (distanceH * this.halfHeight) / this.halfWidth;
+      this.vx = -this.vx * GAME.ENERGY_ATTENUATION_PERCENTAGE; //对应速度方向反转，且扣去能量衰减
+    } else {
+      // 同上面 distanceV
+      distanceH = (distanceV * this.halfWidth) / this.halfHeight;
+      this.vy = -this.vy * GAME.ENERGY_ATTENUATION_PERCENTAGE; //对应速度方向反转，且扣去能量衰减
+    }
+    this.gameObject.setX(this.gameObject.x + (this.vx >= 0 ? -distanceH : distanceH));//防止卡墙
+    this.gameObject.setY(this.gameObject.y + (this.vy >= 0 ? -distanceV : distanceV));
+
+
+    // 动量动能守恒处理
+    this.conservationOfMomentum(rb);
 
     // 调用碰撞
     this.gameObject.collision(rb.gameObject);
+    rb.gameObject.collision(this.gameObject);
 
     // 更新对象
     this.gameObject.handleUpdate(0);
-  }
-
-  // 处理水平碰撞
-  // obj： 撞的对象，  distanceH: 嵌进去的水平距离
-  public handleHorizontalCollision(rb: RigidBody, distanceV: number, distanceH: number): void {
-    if (this.isHandlePhysics) {
-      // 复位处理
-      // this.x += this.vx >= 0 ? -distanceH : distanceH;
-      this.gameObject.setX(this.gameObject.x + (this.vx >= 0 ? -distanceH : distanceH));//防止卡墙
-      // console.log("distanceH: ",distanceH, distanceH);
-      // this.y += this.vy >= 0 ? -distanceV : distanceV;//防止一直下落
-
-      // 动量动能守恒处理
-      this.conservationOfMomentum(rb);
-
-      // 碰墙处理
-      if (!rb.isHandlePhysics) {
-        // 碰撞后的物理处理
-        this.vx = -this.vx * GAME.ENERGY_ATTENUATION_PERCENTAGE;
-      }
-
-    }
-
-    // 调用碰撞
-    this.gameObject.collision(rb.gameObject);
-
-    // 更新对象
-    this.gameObject.handleUpdate(0)
-  }
-
-  // 处理碰撞
-  public handleCollision(rb: RigidBody, distanceV: number, distanceH: number): void {
-    if (this.isHandlePhysics) {
-      // 复位处理
-      console.log(distanceH, distanceV);
-      
-      this.gameObject.setX(this.gameObject.x + (this.vx >= 0 ? -distanceH : distanceH));//防止卡墙
-      this.gameObject.setY(this.gameObject.y + (this.vy >= 0 ? -distanceV : distanceV));
-
-      // 动量动能守恒处理
-      this.conservationOfMomentum(rb);
-
-      // 碰墙处理
-      if (!rb.isHandlePhysics) {
-        // 碰撞后的物理处理
-        this.vx = -this.vx * GAME.ENERGY_ATTENUATION_PERCENTAGE;
-        this.vy = -this.vy * GAME.ENERGY_ATTENUATION_PERCENTAGE;
-      }
-    }
   }
 
   // 动量守恒
@@ -339,7 +287,7 @@ export default class RigidBody {
   }
 
   public setVX(val: number): void {
-    this.vx= val;
+    this.vx = val;
   }
 
   public setVY(val: number): void {
