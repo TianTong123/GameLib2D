@@ -125,7 +125,7 @@ export default class Render {
    * 渲染跟随相机的ui
    */
   public renderCamerUI(): void {
-    const list = GAME.UI_MAMAGER.getAllShowOBJ();
+    const list = GAME.UI_MAMAGER.getUIsShowOBJ();
     for (let i = 0, len = list.length; i < len; i++) {
       let view: View = list[i].view;
       GAME.CAMERA.CAMERA_CTX.drawImage(view.getImg(), view.getX(), view.getY(), view.getWidth(), view.getHeight());
@@ -176,7 +176,7 @@ export default class Render {
   // 总渲染
   public render(deltaTime: number): void{
     // 不放在UI里面UIObject 资源
-    this.UIOBJList = GAME.UI_MAMAGER.getAllShowOBJ();
+    this.UIOBJList = GAME.UI_MAMAGER.UI_OBJ_LIST;
     this.clear();
     this.updateGameObject( (deltaTime - this.timeStamp)/1000 );
     this.renderStatic();
@@ -250,12 +250,25 @@ export default class Render {
    */
   private handleCanvasMouseClickEvent(e: MouseEvent, type: string): void {
     // 还原游戏坐标
-    let x: number = e.clientX - GAME.BASE_X_Offset;
-    let y: number = e.clientY - GAME.BASE_Y_Offset;
+    // 不随着镜头移动的ui
+    const x: number = e.clientX - GAME.BASE_X_Offset;
+    const y: number = e.clientY - GAME.BASE_Y_Offset;
     // 查找对应的ui资源
-    for (let i = 0, len = this.UIOBJList.length; i < len; i++) {
-      this.UIOBJList[i].checkPosInRotationRect(new Vector(x, y));
+    const list: UIObject[] = GAME.UI_MAMAGER.getUIsShowOBJ();
+    for (let i = 0, len = list.length; i < len; i++) {
+      list[i].checkPosInRotationRect(new Vector(x, y));
     }
+    
+
+    // 随着镜头移动的ui
+    const cameraX = x - GAME.CAMERA.getViewX();
+    const cameraY = y - GAME.CAMERA.getViewY();
+    for (let i = 0, len = this.UIOBJList.length; i < len; i++) {
+      this.UIOBJList[i].checkPosInRotationRect(new Vector(cameraX, cameraY));
+    }
+   
+
+    //刷新
     this.render(Date.now());
   }
 

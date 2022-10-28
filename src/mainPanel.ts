@@ -149,6 +149,15 @@ export default class MianPanel extends Panel {
         // 启动
         // scene.start();
         
+        // 不随着相机移动的ui
+        const testBtn: UIObject = new UIObject(require("@/assets/UI/Button.png"), 80, 0, 50, 30);
+        testBtn.setClickEvent(()=>{
+            console.log("6666"); 
+        })
+        GAME.UI_MAMAGER.addUIOBJ( testBtn);
+
+
+        // 下面是随着相机移动的ui
         // 菜单按钮
         const panel1: UI = new UI();
         const menuBtn: UIObject = new UIObject(require("@/assets/UI/Button.png"), 0, 0, 50, 30);
@@ -160,7 +169,7 @@ export default class MianPanel extends Panel {
             
         })
         panel1.addUIObject( menuBtn );
-        GAME.UI_MAMAGER.UI_LIST.push(panel1);
+        GAME.UI_MAMAGER.addUI(panel1);
 
         // 暂停后的ui
         const panel2: UI = new UI();
@@ -174,7 +183,7 @@ export default class MianPanel extends Panel {
         })
         panel2.addUIObject(playBtn);
         panel2.SHOW = false;
-        GAME.UI_MAMAGER.UI_LIST.push(panel2);
+        GAME.UI_MAMAGER.addUI(panel2);
 
     }
 

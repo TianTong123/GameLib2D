@@ -49,7 +49,6 @@ export default class UIObject implements GameBase{
     imgInfo.load();
     this.view = new View(imgInfo, this.x, this.y, this.width, this.height);
     this.view.setId(this.id);
-    // GAME.UI_MAMAGER.addUIOBJ(this);
   };
 
   // 点击事件

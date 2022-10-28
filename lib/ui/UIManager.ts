@@ -14,14 +14,14 @@ export default class UIManager {
 
   // 是否全部加载
   // public IS_ALL_LOAD: boolean = false;
-  
+
   // 静态图片资源
   private imgResources: ImgInfo[] = [];
-  
+
   /**
    * 初始化
    */
-  public init(): void{
+  public init(): void {
     // this.UI_LIST.forEach( ui => {
     //   this.UI_OBJ_LIST.push(...ui.getOBJList());
     // })
@@ -31,33 +31,41 @@ export default class UIManager {
    * 添加UI资源
    * @param ui: UIObject
    */
-  public addUIOBJ( ui: UIObject ): void{
-    this.UI_OBJ_LIST.push( ui );
+  public addUIOBJ(uiObj: UIObject): void {
+    this.UI_OBJ_LIST.push(uiObj);
+  }
+
+  /**
+  * 添加UI
+  * @param ui: UIObject
+  */
+  public addUI(ui: UI): void {
+    this.UI_LIST.push(ui);
   }
 
   /**
    * 获取全部显示的UI
    * @returns UI[]
    */
-  public getShowUIs(): UI[]{
-    return this.UI_LIST.filter( ui => ui.SHOW );
+  private getShowUIs(): UI[] {
+    return this.UI_LIST.filter(ui => ui.SHOW);
   }
-  
+
   /**
    * 获取ui里面全部要显示的object
    * @returns UIObject[]
    */
-  public getAllShowOBJ(): UIObject[]{
+  public getUIsShowOBJ(): UIObject[] {
     let list: UIObject[] = [];
     const UIList: UI[] = this.getShowUIs();
-    UIList.forEach( ui => {
-      list.push(...ui.getOBJList().filter( ui => ui.SHOW ))
+    UIList.forEach(ui => {
+      list.push(...ui.getOBJList().filter(ui => ui.SHOW))
     })
     return list;
   }
 
   // 移除UI资源
-  public deleteUIOBJ( id: string ): void{
-    this.UI_OBJ_LIST = this.UI_OBJ_LIST.filter( e => e.id !== id );
+  public deleteUIOBJ(id: string): void {
+    this.UI_OBJ_LIST = this.UI_OBJ_LIST.filter(e => e.id !== id);
   }
 }

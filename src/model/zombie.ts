@@ -17,8 +17,8 @@ export default abstract class Zombie extends GameObject{
 
   // 碰撞
   public collision( gameObject: GameObject ): void {
-    // 撞到子弹 
-    console.log("!!!!",this.HP, gameObject instanceof Bullet );
+    // // 撞到子弹 
+    // console.log("!!!!",this.HP, gameObject instanceof Bullet );
     
     if( gameObject instanceof Bullet ){      
       this.HP -=  gameObject.getHurtValue();
