@@ -59,6 +59,6 @@ export default abstract class Zombie extends GameObject{
    * 获取y的偏差值
    */
   public getOffsetY(offsetY?: number): number{
-    return this.column * Global.BLOCK_SIZE + Global.BASE_PLANT_Y_Offset + (offsetY || 0);
+    return this.column * Global.BLOCK_SIZE + Global.BASE_PLANT_Y_Offset-10 + (offsetY || 0);
   }
 }

@@ -18,7 +18,7 @@ export default class Wall extends Plant {
     this.y = this.getOffsetY();
     this.width = width || 80;
     this.height = height || 800;
-    this.createView(require("@/assets/SodRoll.png"), this.x, this.y, this.width, this.height);
+    this.createView(require("@/assets/test.png"), this.x, this.y, this.width, this.height);
     const rb: RigidBody = new RigidBody( this, 0 );
     rb.id = this.id;
     rb.setGravity(false);

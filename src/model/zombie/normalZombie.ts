@@ -1,3 +1,4 @@
+import GAME from "../../../lib/game";
 import RigidBody from "../../../lib/rigidBody/rigidBody";
 import Zombie from "../zombie";
 
@@ -44,6 +45,7 @@ export default class NormalZombie extends Zombie{
     // 播放完死亡动画后就回收
     if(this.aniFlag == 2 ){
       this.speed = 0; // 死了设速度为0
+      GAME.ACTIVE_SCENE.deleteRigidbody(this.id);
       if(this.getAniMation().isOver()){
         // 等动画播放完
         this.destroy();

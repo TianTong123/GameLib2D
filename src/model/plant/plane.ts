@@ -18,11 +18,11 @@ export default class Plane extends Plant {
     this.y = this.getOffsetY();
     this.width = width || 800;
     this.height = height || 80;
-    this.createView(require("@/assets/LogoLine.png"), this.x, this.y, this.width, this.height);
+    this.createView(require("@/assets/test.png"), this.x, this.y, this.width, this.height);
 
     // this.setGravity(true);
     // this.rigidBody.des
-    const rb: RigidBody = new RigidBody( this, 0 );
+    const rb: RigidBody = new RigidBody( this, 0,  this.width, this.height, 0, -5);
     rb.id = this.id;
     rb.setGravity(false);
     this.setRigidBody(rb);

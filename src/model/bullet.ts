@@ -66,9 +66,9 @@ export default class Bullet extends Plant {
     rb.id = this.id;
     rb.setHandlePhysics(true);
     // 给一下水平的力
-    rb.addForce(new Vector(140, 0))
+    rb.addForce(new Vector(177, 0))
     // 关闭重力
-    rb.setGravity(false);
+    // rb.setGravity(true);
     this.setRigidBody(rb);
   }
 
