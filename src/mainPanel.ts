@@ -30,6 +30,7 @@ export default class MianPanel extends Panel {
         this.scene.addImgInfo(require("@/assets/test.png"));
         this.scene.addGifInfo(require("@/assets/plant/sunflower.gif"));
         this.scene.addGifInfo(require("@/assets/bullet/PB001.gif"));
+        this.scene.addGifInfo(require("@/assets/bullet/PB10.gif"));
         this.scene.addGifInfo(require("@/assets/bullet/pb.gif"));
         this.scene.addGifInfo(require("@/assets/plant/Peashooter.gif"));
         this.scene.addGifInfo(require("@/assets/zombie/Zombie.gif"));

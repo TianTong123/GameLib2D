@@ -17,10 +17,12 @@ export default class GameAnimation implements GameBase{
   private height: number = 0;
   // GIF 对象
   private gifInfo: GitInfo;
-  // 每一帧的播放时间，即延时
-  private delay: number = 0;
+  // 播放延时数组，即延时
+  private delays: number[];
+  // 总播放时长
+  private totalTime: number;
   // 动画帧列表
-  private frames: Array<ImageData> = [];
+  private frames: Array<ImageData>;
   // 速度快慢，基准值为1，为0就寄了
   private speed: number = 1;
   // 总长度
@@ -39,12 +41,14 @@ export default class GameAnimation implements GameBase{
     this.width = width || 0;
     this.height = height || 0;
     this.gifInfo = gifInfo;
-    this.delay = gifInfo.getDelay();
+    this.delays = gifInfo.getDelayList();
     this.frames = gifInfo.getFrames();
     this.length = this.frames.length;
     this.tempCanvas = gifInfo.getCanvas();
     this.width = this.width || this.tempCanvas.width;
     this.height = this.height || this.tempCanvas.height;
+    this.totalTime = gifInfo.getTotalTime();
+    this.setPlaySpeed(this.speed);
   }
 
   /**
@@ -68,12 +72,15 @@ export default class GameAnimation implements GameBase{
   public getCurrentFrame(): HTMLCanvasElement {
     // 计算当前播放时间
     this.playTime += GAME.FIXED_REFRESH_FRAME_TIME * GAME.TIME_SCALE * 1000;
+
     // 向下取整 ~是否运算, 用32位二进制表示当前值,舍弃小数.然后做否运算,如果为负数就再进行一次补码运算. 相当于 当前数字取负数然后-1
     // 比如 ~2 就是 -2 -1 = 3, 做两次运算就是接上去 -(-3) -1 = 2.因为会舍弃小数,就会有向下取整的效果 
-    // 做两次就是正数
-    let playIndex: number = ~~(this.playTime / this.delay * this.speed);
+    // 做两次就是正数 //~~(this.playTime / this.delay * this.speed);
+    let playIndex: number = ~~this.delays.findIndex( e => e > this.playTime);
+    // console.log(playIndex, this.delays);
+    
     // 超过就重置
-    this.over = playIndex >= this.length;
+    this.over = this.playTime >= this.totalTime;
     if (this.over && this.isLoop) {
       this.playTime = 0;
       playIndex = 0;
@@ -81,7 +88,6 @@ export default class GameAnimation implements GameBase{
     if(this.over && !this.isLoop){
       playIndex = this.frames.length - 1;
     }
-    
     (this.tempCanvas.getContext("2d") as CanvasRenderingContext2D).putImageData(this.frames[playIndex], 0, 0);
     return this.tempCanvas;
   }
@@ -91,7 +97,8 @@ export default class GameAnimation implements GameBase{
    * @param percentage 大于0就行 来控制播放速度
    */
   public setPlaySpeed( percentage: number): void{
-    this.delay /= percentage;
+    this.delays = this.gifInfo.getDelayList().map( e => e / percentage );
+    this.totalTime = this.gifInfo.getTotalTime() / percentage;
   }
 
   // getter && setter

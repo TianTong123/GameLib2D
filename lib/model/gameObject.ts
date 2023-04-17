@@ -92,10 +92,10 @@ export default abstract class GameObject implements GameBase {
     
     // 创建动画
     public createAnimation(url: string, x?: number, y?: number, width?: number, height?: number): void {
-        let gifInfo: GitInfo = GAME.ACTIVE_SCENE.getGifInfo(url); 
-        this.animation = new GameAnimation( gifInfo, x, y, width, height );
-        this.animation.id = this.id; 
-        GAME.ACTIVE_SCENE.addAnimation( this.animation );
+       let gifInfo: GitInfo = GAME.ACTIVE_SCENE.getGifInfo(url); 
+       this.animation = new GameAnimation( gifInfo, x, y, width, height );
+       this.animation.id = this.id; 
+       GAME.ACTIVE_SCENE.addAnimation( this.animation );
     }
 
     // 切换动画

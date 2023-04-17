@@ -7,13 +7,14 @@ import Gif from "./gif";
 export default class GitInfo {
   private url: string; // gif 文件路径（作为唯一值用）
   private frames: ImageData[]; // 动画帧列表
-  private delay: number;// gif 每一帧播放时长
+  private delays: number[];// gif 所有帧播放时长
   private canvas: HTMLCanvasElement | undefined;
+  private totalTime: number = 0; // 播放总时间
 
   constructor( url: string ){
     this.url = url;
     this.frames = [];
-    this.delay = 0;
+    this.delays = [];
   }
 
   /**
@@ -24,9 +25,10 @@ export default class GitInfo {
     return new Promise((resolve, reject) => {
       let gif: Gif = new Gif();
       gif.load(this.url).then( res => {
-        this.delay = res.getDelay();
+        this.delays = res.getDelayList();
         this.frames = res.getFrames();
         this.canvas = res.getTempCanvas();
+        this.totalTime = this.delays[this.delays.length - 1];
         resolve(new Result(1, "加载成功", "success"));    
       }).catch( err => { 
         console.log(err);
@@ -42,8 +44,11 @@ export default class GitInfo {
   public getFrames(): ImageData[] { 
     return this.frames;
   }
-  public getDelay(): number { 
-    return this.delay;
+  public getDelayList(): number[] { 
+    return this.delays;
+  }
+  public getTotalTime(): number { 
+    return this.totalTime;
   }
   public getCanvas(): HTMLCanvasElement { 
     return this.canvas as HTMLCanvasElement;

@@ -4,7 +4,7 @@ import Stream from "./stream";
  * gif类
  */
 export default class Gif {
-  private FRAME_LIST: Array<ImageData> = [];
+  private FRAME_LIST: Array<Frame> = [];
   private TEMP_CANVAS: HTMLCanvasElement;
   private TEMP_CANVAS_CTX: CanvasRenderingContext2D | undefined;
   private GIF_INFO: any;
@@ -166,7 +166,7 @@ export default class Gif {
         // If we disposed every this.TEMP_CANVAS_CTX including first this.TEMP_CANVAS_CTX up to this point, then we have
         // no composited this.TEMP_CANVAS_CTX to restore to. In this case, restore to background instead.
         if (this.CURRENT_FRAME_INDEX !== null && this.CURRENT_FRAME_INDEX as number > -1) {
-          this.TEMP_CANVAS_CTX.putImageData(this.FRAME_LIST[this.CURRENT_FRAME_INDEX as number], 0, 0);
+          this.TEMP_CANVAS_CTX.putImageData(this.FRAME_LIST[this.CURRENT_FRAME_INDEX as number].imageData, 0, 0);
         } else {
           this.TEMP_CANVAS_CTX.clearRect(0, 0, this.TEMP_CANVAS.width, this.TEMP_CANVAS.height);
         }
@@ -190,15 +190,16 @@ export default class Gif {
         imgData.data[i * 4 + 3] = 255; // Opaque.
       }
     });
-
+    
     this.TEMP_CANVAS_CTX.putImageData(imgData, img.leftPos, img.topPos);
   };
 
-  private pushFrame() {
+  // 插入当前帧 delay：帧播放时间
+  private pushFrame(delay: number) {
     if (!this.TEMP_CANVAS_CTX) {
       return
     };
-    this.FRAME_LIST.push(this.TEMP_CANVAS_CTX.getImageData(0, 0, this.GIF_INFO.width, this.GIF_INFO.height));
+    this.FRAME_LIST.push(new Frame(delay, this.TEMP_CANVAS_CTX.getImageData(0, 0, this.GIF_INFO.width, this.GIF_INFO.height)) );
   };
 
   // 解析
@@ -218,8 +219,8 @@ export default class Gif {
       block.delayTime = (this.STREAM as Stream).readUnsigned();
       block.transparencyIndex = (this.STREAM as Stream).readByte();
       block.terminator = (this.STREAM as Stream).readByte();
-      this.DELAY = block.delayTime * 10;
-      this.pushFrame();
+      this.DELAY = block.delayTime;
+      this.pushFrame(block.delayTime);
       this.TRANSPARENCY = block.transparencyGiven ? block.transparencyIndex : null;
     };
 
@@ -395,8 +396,8 @@ export default class Gif {
         break;
       case ';':
         block.type = 'eof';
+        this.pushFrame(this.DELAY);
         // 已经结束啦。结束就跑这
-        // this.playGif();
         break;
       default:
         throw new Error('Unknown block: 0x' + block.sentinel.toString(16)); // TODO: Pad this with a 0.
@@ -410,7 +411,7 @@ export default class Gif {
 
   // 返回所有帧
   public getFrames(): Array<ImageData> {
-    return this.FRAME_LIST;
+    return this.FRAME_LIST.map( e => e.imageData);
   }
 
   // 获取播放延时
@@ -418,8 +419,35 @@ export default class Gif {
     return this.DELAY
   }
 
+  // 获取播放延时数组
+  public getDelayList(): number[] {
+    let sum = 0;
+    return this.FRAME_LIST.map( e => {
+      sum +=  e.delay;
+      return sum * 10
+    });
+  }
+
   // 获取 tempcanvas
   public getTempCanvas(): HTMLCanvasElement {
     return this.TEMP_CANVAS;
+  }
+}
+
+/**
+ * 图片信息类
+ */
+class Frame {
+  public delay: number = 0; // 当前帧播放时长
+  public imageData: ImageData; // 当前帧播放图像
+  
+  /**
+   * 构造器
+   * @param delay ： 当前帧播放时长
+   * @param imageData ： 当前帧播放图像
+   */
+  constructor(delay: number, imageData: ImageData){
+    this.delay = delay;
+    this.imageData = imageData;
   }
 }
