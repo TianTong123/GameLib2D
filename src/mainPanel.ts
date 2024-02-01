@@ -50,12 +50,12 @@ export default class MianPanel extends Panel {
 
         // 设置背景
        let bg: View = new View(this.scene.getImgInfo(require("@/assets/interface/background1.jpg")), -100, 0, Global.BG_WIDTH, Global.BG_HEIGHT);
-       this.scene.addView(bg);
-        new Sunflower(0,  0);
-        new Sunflower(0,  1);
-        new Sunflower(0,  2);
-        new Sunflower(0,  3);
-        new Sunflower(0,  4);
+    //    this.scene.addView(bg);
+        // new Sunflower(0,  0);
+        // new Sunflower(0,  1);
+        // new Sunflower(0,  2);
+        // new Sunflower(0,  3);
+        // new Sunflower(0,  4);
         // new Sunflower(0,  0);
         // new Sunflower(1,  0)
         // setTimeout(async ()=>{
@@ -73,8 +73,13 @@ export default class MianPanel extends Panel {
         // new Bullet({ name: "PB00", isPierce: false, hurtValue: 50, speed: 10, isAll: true, range: -1, type: 0, column: 0, row: 0, offsetX: 40, offsetY: 5, width: 26,  height: 20})
         // new Bullet({ name: "PB00", isPierce: false, hurtValue: 50, speed: 10, isAll: true, range: -1, type: 0, column: 0, row: 1, offsetX: 40, offsetY: 5, width: 26,  height: 20})
         // new Peashooter(0,  0);
-        // new Plane(0, 4);
-        // new Wall(8,0);
+        new Plane(3,2, 80, 80);
+        new Plane(6,2, 80, 80);
+        new Plane(0, 4);
+        new Wall(8,0);
+
+
+        //
         // new Bullet({
         //     name: "PB00",
         //     isPierce: false,
@@ -91,10 +96,10 @@ export default class MianPanel extends Panel {
         //     height: 20
         //   })
         new Peashooter(1,  0);
-        new Peashooter(1,  1);
-        new Peashooter(1,  2);
-        new Peashooter(1,  3);
-        new Peashooter(1,  4);
+        // new Peashooter(1,  1);
+        // new Peashooter(1,  2);
+        // new Peashooter(1,  3);
+        // new Peashooter(1,  4);
         
         // new Peashooter(2,  0);
         // new Peashooter(2,  1);
@@ -126,33 +131,33 @@ export default class MianPanel extends Panel {
         // new Peashooter(6,  3);
         // new Peashooter(6,  4);
         
-        new NormalZombie(9.1,  0);
-        new NormalZombie(9.3,  1);
-        new NormalZombie(8,  2);
-        new NormalZombie(9,  3);
-        new NormalZombie(9.2,  4);
+        // new NormalZombie(9.1,  0);
+        // new NormalZombie(9.3,  1);
+        // new NormalZombie(8,  2);
+        // new NormalZombie(9,  3);
+        // new NormalZombie(9.2,  4);
         
-        new NormalZombie(10,  0);
-        new NormalZombie(10.2,  1);
-        new NormalZombie(9.5,  2);
-        new NormalZombie(9.9,  3);
-        new NormalZombie(9.5,  4);
+        // new NormalZombie(10,  0);
+        // new NormalZombie(10.2,  1);
+        // new NormalZombie(9.5,  2);
+        // new NormalZombie(9.9,  3);
+        // new NormalZombie(9.5,  4);
         
-        setTimeout(()=>{
-            new NormalZombie(10,  0);
-            new NormalZombie(10,  1);
-            new NormalZombie(10,  2);
-            new NormalZombie(10,  3);
-            new NormalZombie(10,  4);
-        },5000)
+        // setTimeout(()=>{
+        //     new NormalZombie(10,  0);
+        //     new NormalZombie(10,  1);
+        //     new NormalZombie(10,  2);
+        //     new NormalZombie(10,  3);
+        //     new NormalZombie(10,  4);
+        // },5000)
 
-        setTimeout(()=>{
-            new NormalZombie(10,  0);
-            new NormalZombie(10,  1);
-            new NormalZombie(10,  2);
-            new NormalZombie(10,  3);
-            new NormalZombie(10,  4);
-        },2000)
+        // setTimeout(()=>{
+        //     new NormalZombie(10,  0);
+        //     new NormalZombie(10,  1);
+        //     new NormalZombie(10,  2);
+        //     new NormalZombie(10,  3);
+        //     new NormalZombie(10,  4);
+        // },2000)
        
         
 

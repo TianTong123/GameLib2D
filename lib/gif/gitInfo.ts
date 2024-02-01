@@ -44,7 +44,7 @@ export default class GitInfo {
   public getFrames(): ImageData[] { 
     return this.frames;
   }
-  public getDelayList(): number[] { 
+  public getDelayList(): number[] {
     return this.delays;
   }
   public getTotalTime(): number { 

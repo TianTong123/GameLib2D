@@ -60,16 +60,16 @@ export default class Bullet extends Plant {
     this.y = this.getOffsetY(args.offsetY);
     this.width = args.width || 60;
     this.height = args.height || 69;
-    // this.createAnimation(require("@/assets/bullet/PB10.gif"), this.x, this.y, this.width, this.height);
+    this.createAnimation(require("@/assets/bullet/pb.gif"), this.x, this.y, this.width, this.height);
     // this.getAniMation().setLoop(true);
-    this.setAni(require("@/assets/bullet/PB10.gif"));
+    // this.setAni(require("@/assets/bullet/PB10.gif"));
     const rb: RigidBody = new RigidBody( this, 0, 26, 26, 0, 0 );
     rb.id = this.id;
     rb.setHandlePhysics(true);
     // 给一下水平的力
     rb.addForce(new Vector(177, 0))
     // 关闭重力
-    // rb.setGravity(true);
+    rb.setGravity(true);
     this.setRigidBody(rb);
   }
 

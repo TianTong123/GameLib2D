@@ -206,6 +206,7 @@ export default class Gif {
   private parseExt(block: any) {
 
     let parseGCExt: Function = (block: any) => {
+      this.pushFrame(this.DELAY);
       (this.STREAM as Stream).readByte(); // Always 4 这个必须得这样执行一次
       var bits = this.byteToBitArr((this.STREAM as Stream).readByte());
       block.reserved = bits.splice(0, 3); // Reserved; should be 000.
@@ -220,7 +221,7 @@ export default class Gif {
       block.transparencyIndex = (this.STREAM as Stream).readByte();
       block.terminator = (this.STREAM as Stream).readByte();
       this.DELAY = block.delayTime;
-      this.pushFrame(block.delayTime);
+      
       this.TRANSPARENCY = block.transparencyGiven ? block.transparencyIndex : null;
     };
 

@@ -262,7 +262,7 @@ export default class RigidBody {
     let v2Heart: number = vectorObj.dot(unitHeart);
 
     // 各自碰撞后的速度标量（这里是联立动能/动量守恒推出的公式）
-    // v₁′ = ( (m₁ - m₂)v₂ + 2m₂v₂ ) / m₁ + m₂
+    // v₁′ = ( (m₁ - m₂)v₁ + 2m₂v₂ ) / m₁ + m₂
     let v1ScalarAfter = (v1Heart * (this.mass - rb.mass) + 2 * rb.mass * v2Heart) / (this.mass + rb.mass);
 
     // 复原

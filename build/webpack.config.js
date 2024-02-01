@@ -20,7 +20,9 @@ module.exports = {
     },
 
     resolve: {
+        // 引入文件的时候可以省略不写的后缀名
         extensions: ['.js', '.ts', '.tsx', '.css'],
+        // 常用路径
         alias: {
             '@': path.join(__dirname, '..'),
             "@lib": path.join(__dirname, '../lib/')

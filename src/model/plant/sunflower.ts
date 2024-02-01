@@ -25,7 +25,7 @@ export default class Sunflower extends Plant{
       this.setAni(require("@/assets/plant/sunflower.gif"));
       // this.setAni(require("@/assets/bullet/PB10.gif"));
       // this.createRigidBody(56, 66);
-      // this.createRigidBody();
+      this.createRigidBody();
       // GAME.CAMERA.setSize(300, 200)
     }
     
