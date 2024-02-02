@@ -36,7 +36,7 @@ export default class GAME {
   // 能量衰减百分比。即碰撞后所损失的能量。1则为弹性碰撞。能量不损失。一直动， 最小值为0
   public static ENERGY_ATTENUATION_PERCENTAGE = 0.7;
   // 误差系数，小于这个就不处理了
-  public static ERROR_COEFFICIENT: number = 0.03;
+  public static ERROR_COEFFICIENT: number = 0.5;
   // 相机
   public static CAMERA: Camera;
   // UIManage

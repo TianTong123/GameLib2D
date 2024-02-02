@@ -146,9 +146,13 @@ export default class RigidBody {
 
     // 只要有轴没有相交，就认为没有碰撞
     // 即两个矩形的中心点距离在x轴投影的长度 大于等于 两个矩形中心点到顶点的距离在x轴上的投影长度之和
+    let gg = 0;
     for (let i = 0; i < axes.length; i++) {
       if (this.getProjectionRadius(axes[i]) + rigidBody.getProjectionRadius(axes[i]) <= centerDistanceVertor.dot(axes[i])) {
+        
         return;
+      }else{
+        gg = i;
       }
     }
 
@@ -164,9 +168,16 @@ export default class RigidBody {
   //  X轴力的处理
   public handleForceX(deltaTime: number): void {
     // 加速度 a =  F / m 
-    const accelerationX: number = this.forceX / this.mass;
+    let accelerationX: number = this.forceX / this.mass;
+   
     // Vt = V0 + at
-    this.vx += accelerationX * this.realCoefficient * deltaTime;
+    this.setVX(this.vx + accelerationX * this.realCoefficient * deltaTime);
+    
+    // 加速度为负值的话，认为开始减速。此时，若速度小于误差值则帮他停止运动
+    if(accelerationX < 0 && this.vx < GAME.ERROR_COEFFICIENT){
+      this.setVX(0);
+    }
+
     //s = vt
     this.gameObject.setX(this.gameObject.x + this.vx * deltaTime);
 
@@ -181,8 +192,12 @@ export default class RigidBody {
     let accelerationY: number = ((this.mass * this.gravityCoefficient * this.isUseGravity) - this.forceY) / this.mass;
 
     // Vt = V0 + at
-    this.vy += accelerationY * this.realCoefficient * deltaTime;
+    this.setVY(this.vy + accelerationY * this.realCoefficient * deltaTime);
 
+    // 加速度为负值的话，认为开始减速。此时，若速度小于误差值则帮他停止运动
+    if(accelerationY < 0 && this.vy < GAME.ERROR_COEFFICIENT){
+      this.setVX(0);
+    }
     //s = vt
     this.gameObject.setY(this.gameObject.y += this.vy * deltaTime);
 
@@ -200,7 +215,9 @@ export default class RigidBody {
   }
 
   // 处理碰撞
-  public handleCollision(rb: RigidBody, distanceV: number, distanceH: number): void {
+  // distanceV: y轴位移
+  // distanceH: x轴位移
+  public handleCollision(rb: RigidBody, distanceV: number, distanceH: number): void { 
     if (!this.isHandlePhysics) {
       return
     }
@@ -215,18 +232,18 @@ export default class RigidBody {
        * 由上式变形得到下面
        */
       distanceV = (distanceH * this.halfHeight) / this.halfWidth;
-      this.vx = -this.vx * GAME.ENERGY_ATTENUATION_PERCENTAGE; //对应速度方向反转，且扣去能量衰减
+      this.setVX(-this.vx * GAME.ENERGY_ATTENUATION_PERCENTAGE)//对应速度方向反转，且扣去能量衰减
+      this.gameObject.setX(this.gameObject.x + (this.vx > 0 ? -distanceH : distanceH));//防止卡墙
+     
     } else {
       // 同上面 distanceV
       distanceH = (distanceV * this.halfWidth) / this.halfHeight;
-      this.vy = -this.vy * GAME.ENERGY_ATTENUATION_PERCENTAGE; //对应速度方向反转，且扣去能量衰减
+      this.setVY(-this.vy * GAME.ENERGY_ATTENUATION_PERCENTAGE)//对应速度方向反转，且扣去能量衰减
+      this.gameObject.setY(this.gameObject.y + (this.vy > 0 ? -distanceV : distanceV));//防止卡墙
     }
-    this.gameObject.setX(this.gameObject.x + (this.vx >= 0 ? -distanceH : distanceH));//防止卡墙
-    this.gameObject.setY(this.gameObject.y + (this.vy >= 0 ? -distanceV : distanceV));
-
-
+    
     // 动量动能守恒处理
-    this.conservationOfMomentum(rb);
+    // this.conservationOfMomentum(rb);
 
     // 调用碰撞
     this.gameObject.collision(rb.gameObject);
@@ -238,6 +255,7 @@ export default class RigidBody {
 
   // 动量守恒
   private conservationOfMomentum(rb: RigidBody): void {
+    
     // 只对开启物理处理的对象经行动量守恒
     if (!rb.isHandlePhysics) {
       return
@@ -264,6 +282,7 @@ export default class RigidBody {
     // 各自碰撞后的速度标量（这里是联立动能/动量守恒推出的公式）
     // v₁′ = ( (m₁ - m₂)v₁ + 2m₂v₂ ) / m₁ + m₂
     let v1ScalarAfter = (v1Heart * (this.mass - rb.mass) + 2 * rb.mass * v2Heart) / (this.mass + rb.mass);
+    
 
     // 复原
 
@@ -276,10 +295,10 @@ export default class RigidBody {
 
     // 切线方向加连心线两个方向的向量相加得到合向量（这就是最终的v₁′）
     let v1After: Vector = v1VectorHeart.add(v1VectorTan);
-
+    console.log(this.gameObject.name, v1After.x * GAME.ENERGY_ATTENUATION_PERCENTAGE, v1After.y * GAME.ENERGY_ATTENUATION_PERCENTAGE);
     // 赋值速度
-    this.vx = v1After.x * GAME.ENERGY_ATTENUATION_PERCENTAGE;
-    this.vy = v1After.y * GAME.ENERGY_ATTENUATION_PERCENTAGE;
+    this.setVX( v1After.x * GAME.ENERGY_ATTENUATION_PERCENTAGE);
+    this.setVY( v1After.y * GAME.ENERGY_ATTENUATION_PERCENTAGE)
   }
 
   public getVX(): number {
@@ -287,11 +306,20 @@ export default class RigidBody {
   }
 
   public setVX(val: number): void {
-    this.vx = val;
+    // if(this.vx < GAME.ERROR_COEFFICIENT){
+    //   this.vx = 0;
+    // }else{
+      this.vx = val;
+    // }
+   
   }
 
   public setVY(val: number): void {
-    this.vy = val;
+    // if(this.vy < GAME.ERROR_COEFFICIENT){
+    //   this.vy = 0;
+    // }else{
+      this.vy = val;
+    // }
   }
   public getVY(): number {
     return this.vy

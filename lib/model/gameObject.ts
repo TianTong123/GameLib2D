@@ -14,6 +14,9 @@ export default abstract class GameObject implements GameBase {
     // id
     public id: string = "";
     
+    // 名字
+    public name: string = "";
+
     // 坐标
     public x: number = 0;
     public y: number = 0;
@@ -69,10 +72,13 @@ export default abstract class GameObject implements GameBase {
 
     // 创建 view
     public createView(url: string, x: number, y: number, width: number, height: number): void {
+        // 去掉旧的，只保留最新
+        GAME.ACTIVE_SCENE.deleteView( this.id );
         let imgInfo: ImgInfo = GAME.ACTIVE_SCENE.getImgInfo(url); 
         this.view = new View(imgInfo, x, y, width, height);
         this.view.setId(this.id);
         GAME.ACTIVE_SCENE.addView(this.view);
+        GAME.ACTIVE_SCENE.refreshComponent();
     }
 
     // 创建刚体(先以当前当前大小位置作为刚体大小位置)   (先暂时弃用，不注释)

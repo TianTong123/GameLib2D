@@ -16,6 +16,7 @@ import Panel from "../lib/scene/panel";
 import TestPanel from "./scene/testPanel";
 import GAME from "../lib/game";
 import UI from "../lib/ui/UI";
+import Vector from "../lib/util/vector";
 /**
  * 游戏界面
  */
@@ -38,6 +39,7 @@ export default class MianPanel extends Panel {
         this.scene.addGifInfo(require("@/assets/zombie/Zombie3.gif"));
         this.scene.addGifInfo(require("@/assets/zombie/ZombieDie.gif"));
         this.scene.addGifInfo(require("@/assets/zombie/ZombieLostHead.gif"));
+        this.scene.addImgInfo(require("@/assets/003.png"));
     }
 
     public run(): void{
@@ -72,11 +74,19 @@ export default class MianPanel extends Panel {
         // }, 2000)
         // new Bullet({ name: "PB00", isPierce: false, hurtValue: 50, speed: 10, isAll: true, range: -1, type: 0, column: 0, row: 0, offsetX: 40, offsetY: 5, width: 26,  height: 20})
         // new Bullet({ name: "PB00", isPierce: false, hurtValue: 50, speed: 10, isAll: true, range: -1, type: 0, column: 0, row: 1, offsetX: 40, offsetY: 5, width: 26,  height: 20})
-        // new Peashooter(0,  0);
-        new Plane(3,2, 80, 80);
-        new Plane(6,2, 80, 80);
+        new Peashooter(2,  0);
+        // new Plane(3,2, 80, 80);
+        // const pl:Plane = new Plane(6,2, 80, 80);
+        // pl.name = "凑数";
+        // pl.createView(require("@/assets/003.png"), pl.x, pl.y, pl.width, pl.height);
+        // pl.rigidBody?.setGravity(true);
+        // // pl.rigidBody?.addForce(new Vector(1707, 0))
+        // pl.rigidBody?.setHandlePhysics(true);
+
         new Plane(0, 4);
+       
         new Wall(8,0);
+        new Wall(0,0);
 
 
         //
@@ -95,7 +105,7 @@ export default class MianPanel extends Panel {
         //     width: 26,
         //     height: 20
         //   })
-        new Peashooter(1,  0);
+        // new Peashooter(1,  0);
         // new Peashooter(1,  1);
         // new Peashooter(1,  2);
         // new Peashooter(1,  3);
