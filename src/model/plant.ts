@@ -1,6 +1,7 @@
 import RigidBody from "../../lib/rigidBody/rigidBody";
 import GameObject from "../../lib/model/gameObject";
 import Global from "../public/Global";
+import Zombie from "./zombie";
 /**
  * 植物类
  */
@@ -9,7 +10,8 @@ export default abstract class Plant extends GameObject{
   public column: number = 0;
   public row: number = 0;
   public speed: number = 0;
-  
+  public life: number = 50;
+  public zom: any;
   constructor(){
     super();
     // const rb: RigidBody = new RigidBody( this, 0 );
@@ -39,4 +41,28 @@ export default abstract class Plant extends GameObject{
   public getOffsetY(offsetY?: number): number{
     return this.column * Global.BLOCK_SIZE + Global.BASE_PLANT_Y_Offset + (offsetY || 0);
   }
+
+
+  // 碰撞
+  public collision(gameObject: Zombie ): void{
+    // if( gameObject instanceof Zombie ){
+    //   this.isInjury = true;
+    // }
+    this.myCollision(gameObject)
+  }
+
+  public abstract myCollision( gameObject: GameObject ): void;
+
+  /**
+   * 更新方法
+   */
+  public update(deltaTime: number): void {
+
+    if( this.life <= 0 ){
+      this.destroy();
+    }
+    this.myUpdate(deltaTime);
+  }
+
+  public abstract myUpdate( deltaTime: number ): void 
 }

@@ -43,6 +43,10 @@ export default class GAME {
   public static UI_MAMAGER: UIManager;
   // 时间速率
   public static TIME_SCALE: number = 1;
+  // 矩形go
+  public static GAME_OBJECT_TYPE_RECT: string = "RECT";
+  // 圆形go
+  public static GAME_OBJECT_TYPE_CIRCLE: string = "CIRCLE";
   // public static LOADINGLIST: number[] = []
 
   // 游戏启动

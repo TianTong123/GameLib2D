@@ -24,6 +24,7 @@ export default abstract class GameObject implements GameBase {
     // 大小
     public width: number = 0;
     public height: number = 0;
+    public radius: number = 0;
 
     // 是否显示
     public show: Boolean = true;
@@ -36,6 +37,15 @@ export default abstract class GameObject implements GameBase {
 
     // 刚体
     public rigidBody?: RigidBody;
+
+    // 旋转角度（顺时针
+    public angle: number = 0;
+
+    // 颜色
+    public gameObjectColor: string = "#0f0"
+
+    //  rect矩形  circle 圆
+    public gameObjectType: string = "rect";
 
     // 构造器
     constructor(){
@@ -71,7 +81,7 @@ export default abstract class GameObject implements GameBase {
     }
 
     // 创建 view
-    public createView(url: string, x: number, y: number, width: number, height: number): void {
+    public createView(url: string, x: number, y: number, width: number, height: number, angle?:number): void {
         // 去掉旧的，只保留最新
         GAME.ACTIVE_SCENE.deleteView( this.id );
         let imgInfo: ImgInfo = GAME.ACTIVE_SCENE.getImgInfo(url); 
@@ -97,7 +107,7 @@ export default abstract class GameObject implements GameBase {
 
     
     // 创建动画
-    public createAnimation(url: string, x?: number, y?: number, width?: number, height?: number): void {
+    public createAnimation(url: string, x?: number, y?: number, width?: number, height?: number, angle?:number): void {
        let gifInfo: GitInfo = GAME.ACTIVE_SCENE.getGifInfo(url); 
        this.animation = new GameAnimation( gifInfo, x, y, width, height );
        this.animation.id = this.id; 
@@ -105,7 +115,7 @@ export default abstract class GameObject implements GameBase {
     }
 
     // 切换动画
-    public switchAnimation(url: string, x?: number, y?: number, width?: number, height?: number): void {
+    public switchAnimation(url: string, x?: number, y?: number, width?: number, height?: number, angle?:number): void {
         let gifInfo: GitInfo = GAME.ACTIVE_SCENE.getGifInfo(url); 
         this.animation = new GameAnimation( gifInfo, x, y, width, height );
         this.animation.id = this.id; 

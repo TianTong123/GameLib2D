@@ -50,7 +50,7 @@ export default class Plane extends Plant {
   /**
    * 攻击方法
    */
-  public update(deltaTime: number): void {
+  public myUpdate(deltaTime: number): void {
     
   }
 
@@ -60,7 +60,7 @@ export default class Plane extends Plant {
   }
 
   // 碰撞
-  public collision(go: GameObject): void {
+  public myCollision(go: GameObject): void {
     // console.log("欸嘿", go); 
   }
 }

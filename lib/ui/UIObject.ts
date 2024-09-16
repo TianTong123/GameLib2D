@@ -19,7 +19,7 @@ export default class UIObject implements GameBase{
   public SHOW: Boolean = true;
 
   // 旋转角度（可以考虑的扩展）
-  private rotation: number = 0;
+  private angle: number = 0;
   
   // 是否相对， true： 相对于相机固定， false， 相对于scene 固定
   // private isRelavite: boolean = false;
@@ -65,13 +65,13 @@ export default class UIObject implements GameBase{
    *  思路是拿到一个点后，给他计算旋转后的坐标是不是落在没有旋转的矩形内
    * @param point: 被点击的坐标
    */
-  public checkPosInRotationRect( point: Vector ): void{
+  public checkPosInAngleRect( point: Vector ): void{
     // rigidbody 的常规操作，取一半，拿中心点
     const halfWidth: number = this.width / 2;
     const halfHeight: number = this.height / 2;
     const centerPoint: Vector = new Vector(this.x + halfWidth, this.y + halfHeight );
     // 转换角度
-    const r: number = -this.rotation * (Math.PI / 180);
+    const r: number = -this.angle * (Math.PI / 180);
     // 拿到旋转后的坐标
     const nTempX: number = centerPoint.x + (point.x - centerPoint.x) * Math.cos(r) - (point.y - centerPoint.y) * Math.sin(r);
     const nTempY: number = centerPoint.y + (point.x - centerPoint.x) * Math.sin(r) + (point.y - centerPoint.y) * Math.cos(r);

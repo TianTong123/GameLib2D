@@ -5,6 +5,7 @@ import GameObject from "../model/gameObject";
 import RigidBody from "../rigidBody/rigidBody";
 import UIObject from "../ui/UIObject";
 import Vector from "../util/vector";
+import Point from "../model/point";
 /**
  * 渲染类
  */
@@ -148,6 +149,7 @@ export default class Render {
    */
   public updateGameObject(deltaTime: number): void {
     for (let i = 0, len = this.gameObjectList.length; i < len; i++) {
+      this.drawColor(this.gameObjectList[i])
       this.gameObjectList[i]?.handleUpdate(deltaTime);
     }
   }
@@ -172,6 +174,44 @@ export default class Render {
     }
   }
 
+  // 绘制颜色
+  public drawColor(go: GameObject): void {
+    this.CTX.fillStyle = go.gameObjectColor;
+    this.CTX.fill();
+    if( go.gameObjectType === "rect" ){
+      this.CTX.beginPath();
+      // 旋转中心
+      const pivot: Point = new Point(go.x + go.width/2, go.y + go.height/2);
+      // 旋转后的四个点
+      const pLeft: Point = this.getRotatePoint(pivot, new Point(go.x, go.y), go.angle);
+      const pRight: Point = this.getRotatePoint(pivot, new Point(go.x + go.width, go.y), go.angle);
+      const pRightBottom: Point = this.getRotatePoint(pivot, new Point(go.x + go.width, go.y + go.height), go.angle);
+      const pLeftBottom: Point = this.getRotatePoint(pivot, new Point(go.x, go.y + go.height), go.angle);
+      this.CTX.moveTo(pLeft.X, pLeft.Y)
+      this.CTX.lineTo(pRight.X , pRight.Y)
+      this.CTX.lineTo(pRightBottom.X, pRightBottom.Y)
+      this.CTX.lineTo(pLeftBottom.X, pLeftBottom.Y)
+      this.CTX.closePath()
+    }else{
+      this.CTX.beginPath()
+      this.CTX.arc(go.x, go.y, go.radius, 0, 2 * Math.PI)
+      this.CTX.closePath()
+    }
+  }
+  
+
+  /**
+   * 获取旋转坐标
+   * @param pivot 旋转中心
+   * @param point 被旋转的四个点的坐标
+   * @param deg 旋转角度
+   */
+  public getRotatePoint(pivot: Point, point: Point, deg: number): Point{
+    const angle: number = deg * Math.PI / 180;
+    const x: number = Math.round((Math.cos(angle) * (point.X - pivot.X)) - (Math.sin(angle) * (point.Y - pivot.Y)) + pivot.X);
+    const y: number = Math.round((Math.sin(angle) * (point.X - pivot.X)) + (Math.cos(angle) * (point.Y - pivot.Y)) + pivot.Y);
+    return new Point(x, y)
+  }
 
   // 总渲染
   public render(deltaTime: number): void{
@@ -256,7 +296,7 @@ export default class Render {
     // 查找对应的ui资源
     const list: UIObject[] = GAME.UI_MAMAGER.getUIsShowOBJ();
     for (let i = 0, len = list.length; i < len; i++) {
-      list[i].checkPosInRotationRect(new Vector(x, y));
+      list[i].checkPosInAngleRect(new Vector(x, y));
     }
     
 
@@ -264,7 +304,7 @@ export default class Render {
     const cameraX = x - GAME.CAMERA.getViewX();
     const cameraY = y - GAME.CAMERA.getViewY();
     for (let i = 0, len = this.UIOBJList.length; i < len; i++) {
-      this.UIOBJList[i].checkPosInRotationRect(new Vector(cameraX, cameraY));
+      this.UIOBJList[i].checkPosInAngleRect(new Vector(cameraX, cameraY));
     }
    
 

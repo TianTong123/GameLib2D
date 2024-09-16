@@ -43,7 +43,8 @@ export default class Bullet extends Plant {
     offsetX: number;
     offsetY: number;
     width: number;
-    height: number
+    height: number;
+    bulletType:  string
   }) {
     super()
     this.isPierce = Boolean(args.isPierce);
@@ -60,14 +61,19 @@ export default class Bullet extends Plant {
     this.y = this.getOffsetY(args.offsetY);
     this.width = args.width || 60;
     this.height = args.height || 69;
-    this.createAnimation(require("@/assets/bullet/pb.gif"), this.x, this.y, this.width, this.height);
+    if( args.bulletType == "PB10"){
+      this.createAnimation(require("@/assets/bullet/pb.gif"), this.x, this.y, this.width, this.height);
+    }else{
+      this.createAnimation(require("@/assets/bullet/PB001.gif"), this.x, this.y, this.width, this.height);
+    }
+    
     // this.getAniMation().setLoop(true);
     // this.setAni(require("@/assets/bullet/PB10.gif"));
     const rb: RigidBody = new RigidBody( this, 0, 26, 26, 0, 0 );
     rb.id = this.id;
     rb.setHandlePhysics(true);
     // 给一下水平的力
-    rb.addForce(new Vector(177, 0))
+    rb.addForce(new Vector(877, 10))
     // 关闭重力
     rb.setGravity(true);
     this.setRigidBody(rb);
@@ -76,7 +82,7 @@ export default class Bullet extends Plant {
   /**
     * 刷新方法
     */
-  public update(deltaTime: number): void {
+  public myUpdate(deltaTime: number): void {
     //this.x =  this.x + this.speed * deltaTime ;// (1000/60/1000);
     // this.view?.setX(this.x);
     // 飞出距离就注销
@@ -97,6 +103,10 @@ export default class Bullet extends Plant {
       this.destroy();
     }
     
+  }
+
+  public myCollision(gameObject: GameObject): void {
+    throw new Error("Method not implemented.");
   }
 
   /**

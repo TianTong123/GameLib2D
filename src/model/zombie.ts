@@ -1,6 +1,8 @@
 import GameObject from "../../lib/model/gameObject";
 import Global from "../public/Global";
 import Bullet from "./bullet";
+import Plant from "./plant";
+import Plane from "./plant/plane";
 /**
  * 僵尸类
  */
@@ -9,9 +11,11 @@ export default abstract class Zombie extends GameObject{
   public column: number = 0;
   public row: number = 0;
   public speed: number = 0;
-  
+  public attack = 0;
+
   constructor(){
     super();
+    this.name = "zombie"
     // this.setVX(this.speed);
   }
 
@@ -23,12 +27,16 @@ export default abstract class Zombie extends GameObject{
     if( gameObject instanceof Bullet ){      
       this.HP -=  gameObject.getHurtValue();
     }
+    this.myCollision(gameObject)
+    
     // 没血就死亡
     // if(this.HP <= 0){
     //   this.switchAni(require("@/assets/zombie/ZombieDie.gif"));
     //   this.setVX(0);
     // }
   }
+
+  public abstract myCollision( gameObject: GameObject ): void 
 
 
   /**
@@ -60,5 +68,10 @@ export default abstract class Zombie extends GameObject{
    */
   public getOffsetY(offsetY?: number): number{
     return this.column * Global.BLOCK_SIZE + Global.BASE_PLANT_Y_Offset-10 + (offsetY || 0);
+  }
+
+  // 获取攻击力
+  public getAttack(): number {
+    return this.attack;
   }
 }

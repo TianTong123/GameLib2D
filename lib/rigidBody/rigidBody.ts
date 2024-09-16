@@ -8,7 +8,7 @@ import Vector from "../util/vector";
 export default class RigidBody {
   public id: string = "";
   //旋转角度 0 -360  
-  public rotation: number = 0;
+  public angle: number = 0;
   // gobj对象
   public gameObject: GameObject;
   // 矩形中心点坐标
@@ -23,6 +23,16 @@ export default class RigidBody {
   // 偏移量
   private offsetX: number;
   private offsetY: number;
+
+  // 实际碰撞盒坐标
+  private collisionX: number;
+  private collisionY: number;
+
+  // 实际碰撞盒宽、高、半径、
+
+
+  // 刚体盒子类型  rect矩形  circle 圆
+  private type: string = "rect";
 
   // 是否进行物理处理 默认不开启
   public isHandlePhysics: boolean = false;
@@ -51,7 +61,7 @@ export default class RigidBody {
   // 摩擦系数 默认为1
   private frictCoefficient: number = 1;
 
-  constructor(gameObject: GameObject, rotation: number, width?: number, height?: number, offsetX?: number, offsetY?: number) {
+  constructor(gameObject: GameObject, angle: number, width?: number, height?: number, offsetX?: number, offsetY?: number) {
     this.gameObject = gameObject;
 
     this.halfWidth = (width || gameObject.width) / 2;
@@ -66,8 +76,11 @@ export default class RigidBody {
     this.offsetX = offsetX || 0;
     this.offsetY = offsetY || 0;
 
+    this.collisionX = gameObject.x + this.offsetX;
+    this.collisionY = gameObject.y + this.offsetY;
+
     // 矩形中心
-    this.setRotation(rotation);
+    this.setAngle(angle);
 
     GAME.ACTIVE_SCENE.addRigidbody(this);
   }
@@ -92,13 +105,14 @@ export default class RigidBody {
 
   /** 
    *  单位向量
-   * @param rotation 0 - 360  
+   * @param angle 0 - 360  
    */
-  public setRotation(rotation: number) {
-    this.rotation = rotation;
+  public setAngle(deg: number) {
+    this.angle = deg;
+    const angle: number =  deg * Math.PI / 180;
     // 计算在x, y偏转角度
-    this.axisX = new Vector(Math.cos(rotation), Math.sin(rotation));
-    this.axisY = new Vector(-Math.sin(rotation), Math.cos(rotation));
+    this.axisX = new Vector(Math.cos(angle), Math.sin(angle));
+    this.axisY = new Vector(-Math.sin(angle), Math.cos(angle));
 
     this.getProjectionRadius(this.axisX);
     this.getProjectionRadius(this.axisY);
@@ -132,6 +146,20 @@ export default class RigidBody {
     if (!rigidBody) {
       return false;
     }
+    this.setAngle(this.gameObject.angle);
+    
+    // 圆对圆
+    if(this.type === "circle" && rigidBody.type === "circle"){
+
+    }
+    // 圆对矩形 (目前只有两个形状，所以不同时为 矩形对圆
+    if(this.type != rigidBody.type){
+
+    }
+    // 矩形对矩形
+    if(this.type === "circle" && rigidBody.type === "circle"){
+
+    }
 
     // 向量相减
     let centerDistanceVertor: Vector = this.centerPoint.substract(rigidBody.centerPoint);
@@ -143,7 +171,7 @@ export default class RigidBody {
       rigidBody.axisX,
       rigidBody.axisY
     ];
-
+    
     // 只要有轴没有相交，就认为没有碰撞
     // 即两个矩形的中心点距离在x轴投影的长度 大于等于 两个矩形中心点到顶点的距离在x轴上的投影长度之和
     let gg = 0;
@@ -157,13 +185,28 @@ export default class RigidBody {
     }
 
     // 辩别方向
-    // 两物体的中心距离向量在对应轴的上的投影减去两个物体各自的投影
+    // 两物体的中心距离向量在对应轴的上的投影减去两个物体各自的投影(弃用)
+
+    // 改为下面这个（待实现）
+    // y轴速度向上，就是撞墙
+    // y轴速度向下，就是踩地板
+
     const distanceH: number = centerDistanceVertor.dot(axes[0]) - this.getProjectionRadius(axes[0]) - rigidBody.getProjectionRadius(axes[0]);
     const distanceV: number = centerDistanceVertor.dot(axes[1]) - this.getProjectionRadius(axes[1]) - rigidBody.getProjectionRadius(axes[1]);
 
     this.handleCollision(rigidBody, distanceV, distanceH);
     rigidBody.handleCollision(this, distanceV, distanceH);
   }
+
+  // 圆形相撞
+  // public circleToCircle(): boolean {
+  //   const  distance = Math.sqrt(Math.pow(circle1X - circle2X, 2) + Math.pow(circle1Y - circle2Y, 2))
+  //   return distance < circle1.radius + circle2.radius
+    
+  // }
+  // 矩形相撞
+
+  // 圆和矩形相撞
 
   //  X轴力的处理
   public handleForceX(deltaTime: number): void {
@@ -218,33 +261,32 @@ export default class RigidBody {
   // distanceV: y轴位移
   // distanceH: x轴位移
   public handleCollision(rb: RigidBody, distanceV: number, distanceH: number): void { 
-    if (!this.isHandlePhysics) {
-      return
-    }
-    // 是水平方向为最小值吗？ 绝对值）
-    const isHandleHorizontal: boolean = Math.abs(distanceH) < Math.abs(distanceV);
-
-    if (isHandleHorizontal) {
-      /**
-       * 如果是横轴为最小值，说明是在横轴发生了碰撞。计算在垂直方向的卡进去的路程，然后还原回来让物体一直在表面
-       * 计算陷进去的值
-       * distanceH / halfWidth = distanceV / halfHeight
-       * 由上式变形得到下面
-       */
-      distanceV = (distanceH * this.halfHeight) / this.halfWidth;
-      this.setVX(-this.vx * GAME.ENERGY_ATTENUATION_PERCENTAGE)//对应速度方向反转，且扣去能量衰减
-      this.gameObject.setX(this.gameObject.x + (this.vx > 0 ? -distanceH : distanceH));//防止卡墙
-     
-    } else {
-      // 同上面 distanceV
-      distanceH = (distanceV * this.halfWidth) / this.halfHeight;
-      this.setVY(-this.vy * GAME.ENERGY_ATTENUATION_PERCENTAGE)//对应速度方向反转，且扣去能量衰减
-      this.gameObject.setY(this.gameObject.y + (this.vy > 0 ? -distanceV : distanceV));//防止卡墙
-    }
+    if (this.isHandlePhysics) {
     
-    // 动量动能守恒处理
-    // this.conservationOfMomentum(rb);
+      // 是水平方向为最小值吗？ 绝对值）
+      const isHandleHorizontal: boolean = Math.abs(distanceH) < Math.abs(distanceV);
 
+      if (isHandleHorizontal) {
+        /**
+         * 如果是横轴为最小值，说明是在横轴发生了碰撞。计算在垂直方向的卡进去的路程，然后还原回来让物体一直在表面
+         * 计算陷进去的值
+         * distanceH / halfWidth = distanceV / halfHeight
+         * 由上式变形得到下面
+         */
+        distanceV = (distanceH * this.halfHeight) / this.halfWidth;
+        this.setVX(-this.vx * GAME.ENERGY_ATTENUATION_PERCENTAGE)//对应速度方向反转，且扣去能量衰减
+        this.gameObject.setX(this.gameObject.x + (this.vx > 0 ? -distanceH : distanceH));//防止卡墙
+      
+      } else {
+        // 同上面 distanceV
+        distanceH = (distanceV * this.halfWidth) / this.halfHeight;
+        this.setVY(-this.vy * GAME.ENERGY_ATTENUATION_PERCENTAGE)//对应速度方向反转，且扣去能量衰减
+        this.gameObject.setY(this.gameObject.y + (this.vy > 0 ? -distanceV : distanceV));//防止卡墙
+      }
+      
+      // 动量动能守恒处理
+      // this.conservationOfMomentum(rb);
+    }
     // 调用碰撞
     this.gameObject.collision(rb.gameObject);
     rb.gameObject.collision(this.gameObject);
